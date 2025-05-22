@@ -3,7 +3,7 @@
 
 ## Description
 
-This tool provides a user interface to browse the data of the project Harmonia Universalis in the FactGrid database https://database.factgrid.de/ (Wikibase instance). 
+This tool provides a user interface to browse the data of the project Harmonia Universalis implemented in FactGrid database https://database.factgrid.de/ (Wikibase instance). 
 
 ## Technologies used
 
