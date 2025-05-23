@@ -50,8 +50,8 @@ export class SearchComponent implements OnInit {
 
   //  selectedLang: string = (localStorage['selectedLang']===undefined)? "en": localStorage['selectedLang']; //initialization of the storage of the selected language (english)
 
-    title = 'factgrid';
-    subtitle:string = "a database for historians";
+    title = 'harmoniaUniversalis';
+    subtitle:string = "a database on animal magnetism";
     advanced_search:string = "advanced search";
     projects:string = "research projects";
     fields: string = "fields of reserach";

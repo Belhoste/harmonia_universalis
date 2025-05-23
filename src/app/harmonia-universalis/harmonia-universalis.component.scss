@@ -3,34 +3,123 @@
   overflow-x: auto;
 }
 
-  @media (max-width: 600px) {
- 
-   .mat-header-row {
-      display: none;
-    }
+// Styles généraux pour la table
+.mat-table {
+  font-size: 1em;
+}
 
-    .responsive-cell {
-      display: block;
-      width: 100%;
-      padding: 0 16px;
-      margin: 16px 0;
-      border: 0 none;
-    }
+th.mat-header-cell {
+  white-space: nowrap;
+  padding: 12px 8px;
+  font-size: 1em;
+  vertical-align: middle;
+}
 
-    .responsive-row {
-      display: block;
-      overflow: hidden;
-      height: auto;
-      position: relative;
-      box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-      border-radius: 3px;
-      margin-bottom: 24px;
-      + .responsive-row {
-        margin-top: 24px;
-      }
-    }
+.mat-sort-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
 
-      mat-paginator {
-        margin-top: 24px;
-      }
+.mat-sort-header-arrow, .mat-sort-header-indicator {
+  color: #1976d2;
+  transition: color 0.2s;
+}
+
+// Responsive : adaptation pour mobile
+@media (max-width: 600px) {
+
+  .mat-table {
+    font-size: 0.95em;
+  }
+
+  th.mat-header-cell {
+    white-space: nowrap;
+    padding: 8px 4px;
+    font-size: 1em;
+    vertical-align: middle;
+  }
+
+  .mat-sort-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .mat-sort-header-arrow,
+  .mat-sort-header-indicator {
+    opacity: 1 !important; // Force l'affichage de la flèche
+    color: #1976d2 !important;
+    font-size: 1.2em;
+    margin-left: 2px;
+  }
+
+  .mat-header-row {
+    display: none;
+  }
+
+  .responsive-cell {
+    display: block;
+    width: 100%;
+    padding: 0 16px;
+    margin: 16px 0;
+    border: 0 none;
+    position: relative;
+    padding-left: 110px; // espace pour le label
+  }
+
+  .responsive-cell::before {
+    content: attr(data-label) ": ";
+    position: absolute;
+    left: 16px;
+    top: 0;
+    font-weight: bold;
+    color: #666;
+    white-space: nowrap;
+  }
+
+  .responsive-row {
+    display: block;
+    overflow: hidden;
+    height: auto;
+    position: relative;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    border-radius: 3px;
+    margin-bottom: 24px;
+
+    + .responsive-row {
+      margin-top: 24px;
     }
+  }
+
+  mat-paginator {
+    margin-top: 24px;
+  }
+
+  .mobile-sort-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .sort-btn {
+    min-width: unset;
+    padding: 2px 6px;
+    font-size: 0.95em;
+    line-height: 1.2;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .sort-btn:focus {
+    outline: none;
+  }
+
+  .sort-btn mat-icon {
+    margin-left: 2px;
+    font-size: 1em;
+  }
+}

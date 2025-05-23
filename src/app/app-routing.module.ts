@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 import { DisplayComponent} from './display/display.component';
-import { SearchComponent } from './search/search.component';
+import { HomeComponent } from './home/home.component';
 import { MapComponent } from './display/map/map.component';
 import { ParisSearchComponent } from './paris-search/paris-search.component'
 
@@ -11,7 +11,9 @@ export const routingConfiguration: ExtraOptions = {
 
 const routes: Routes = [
 
-  { path: '', component:SearchComponent},
+  { path: '', loadComponent: () => import('./home/home.component').then(m => m.HomeComponent) },
+
+  { path: 'search', loadComponent: () => import('./search/search.component').then(mod => mod.SearchComponent) },
 /*  { path: 'item/:id',
     component: DisplayComponent,  
     children: [
@@ -24,6 +26,7 @@ const routes: Routes = [
   },
   { path: 'paris', loadComponent: () => import('./paris-search/paris-search.component').then(mod => mod.ParisSearchComponent) },
   { path: 'harmonia_universalis', loadComponent: () => import('./harmonia-universalis/harmonia-universalis.component').then(mod => mod.HarmoniaUniversalisComponent) },
+  { path: 'prosopography', loadComponent: () => import('./prosopography/prosopography.component').then(mod => mod.ProsopographyComponent) },
   { path: 'advanced_search', loadComponent: () => import('./search/advanced-search/advanced-search.component').then(mod => mod.AdvancedSearchComponent) }
 
 ]

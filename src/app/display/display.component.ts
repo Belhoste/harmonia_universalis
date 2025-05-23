@@ -27,7 +27,8 @@ import { BackListService } from '../services/back-list.service';
 import { SetSelectedItemsListService } from '../services/set-selected-items-list.service';
 import { TranscriptionService } from './services/transcription.service'
 import { Router } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { ItemTalkService } from '../services/item-talk.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { JoinPipe } from '../join.pipe';
 import { ItemInfoComponent } from './item-info/item-info.component';
@@ -94,6 +95,7 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   private externalLinksDisplay = inject(ExternalLinksDisplayService);
   private iframesDisplay = inject(IframesDisplayService);
   private wikiDisplay = inject(WikiDisplayService);
+  private itemTalk = inject(ItemTalkService);
   private sanitizer = inject(DomSanitizer);
   private observer = inject(BreakpointObserver);
 
@@ -242,7 +244,7 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   listTitle: string;
   list: any[] = [];
 //  sparqlList:any[];
-  superClass:string;
+  superClass: string;
 
   //wiki
 
@@ -276,7 +278,8 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   locationAndContext: any[]; //for organisations, societies and institutions
   mainList: any[]; //main list for persons, places, organisations
   pictures: any[];//for pictures
-  info:any[]; //for info
+  info: any[]; //for info
+  notice: string;// for notice Harmonia Universalis
 
   //display the elements
   isMain: boolean = false;
@@ -305,6 +308,7 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   isInfo: boolean = false;
   isMobile: boolean = false;
   isAliases: boolean = false;
+  isNotice: boolean = false;
 
   onClick2(query) { //handling click for sparql query (it is not used for the moment)
     query = this.request.getList(query).pipe(map(res => this.listFromSparql(res)));
@@ -462,10 +466,10 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
           if (item !== undefined) {
             this.item = item;
             this.claims = item[0].claims;
-            console.log(item)
             this.setList.addToSelectedItemsList(item[0]);  //handle list of selected items
             if (this.claims.P2 === undefined) { alert("property P2 undefined") };
             if (this.claims.P320 === undefined) { this.hideList() };
+            if (this.item[0].notice_HU !== undefined) { this.isNotice = true ; this.notice = this.item[0].notice_HU };
             this.superClass = "";
             this.natureOf = this.claims.P2[0].mainsnak.datavalue.value.id;
             this.event = this.claims.P2.event;
@@ -500,7 +504,14 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
             /************************************** sparql ********************************************************************** */
        
 
-              this.item[0].sparql.subscribe(res => this.sparqlDisplay(res));
+            this.item[0].sparql.subscribe(res => this.sparqlDisplay(res));
+
+            //***************************** notice HU ***************************************************************
+
+            if (this.item[0].notice_HU !== undefined) {
+              this.isNotice = true;
+            }
+
 
 
 
@@ -614,8 +625,9 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.pictures = this.pictures.map((picture, index) => ({
               ...picture,
-              uniqueKey: picture.picture || `picture-${index}`
+              uniqueKey: picture.full || picture.thumbnail || `picture-${index}`
             }));
+
 
 
             if (this.pictures !== undefined) {
@@ -829,7 +841,6 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   sparqlDisplay(u) {
-    console.log(u);
        if (u){
          if (u[0]) {
             this.sparqlSubject0 = u[0][0];
@@ -880,7 +891,6 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 
          if (u[4] !== undefined) {
            this.sparqlSubject4 = u[4][0];
-           console.log(this.sparqlSubject4);
            this.sparqlData4 = u[4][1];
            this.isSparql4 = false
            if (this.sparqlData4 !== undefined) {
@@ -891,7 +901,6 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
          } 
       }
    }
-
 
   qualifiersList(u) { //setting the list of qualifiers for a mainsnak
     for (let i = 0; i < u.length; i++) {

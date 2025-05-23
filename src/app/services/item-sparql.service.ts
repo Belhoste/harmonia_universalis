@@ -39,8 +39,6 @@ export class ItemSparqlService {
   langService: string = "%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22" + this.lang.selectedLang + "%22%2C%22en%22.%20%7D%0A%7D%0A";
 
   itemSparql(item) {  // get a list depending of the type of the item
-    console.log(item);
-
     let a: boolean = false;
     this.Q16200Test = this.Q16200TestGet(item);  //boolean test for addresses
     this.Q24499Test = this.Q24499TestGet(item);  // boolean test for family names
@@ -98,7 +96,6 @@ export class ItemSparqlService {
   }
 
   selectSparql1(test1, test2, test3, test4, test5, test6, item) {  // select the right result for the component sparql1
-    console.log(test1, test2, test3, test4, test5, test6);
     let result: Observable<any[]>;
     if (test5 === true) {  // addresses
       result = this.Q16200Sparql(item);
@@ -133,7 +130,6 @@ export class ItemSparqlService {
   }
 
   selectSparql2(test1, test2, item) {  // select the right result for sparql2
-    console.log(test1, test2);
     let result: Observable<any[]>;
     if (test1 === true) {
       result = this.Q140759Sparql(test1, item);  // health practitioners
@@ -149,7 +145,6 @@ export class ItemSparqlService {
   }
 
   selectSparql3(test1, test2, test3, test4, item) {  // select the right result for sparql3
-    console.log(test1, test2, test3, test4);
     let result: Observable<any[]>;
     if (test1 === true) {
       result = this.masterSparql(test1, item);  // master
@@ -230,7 +225,6 @@ export class ItemSparqlService {
     if (item.claims.P2[0].mainsnak.datavalue.value.id == "Q77457") {
       test = true;
     };
-    console.log(test);
     return of(test)
   }
 
@@ -423,7 +417,6 @@ export class ItemSparqlService {
   subclassTest(a, type) {  // to test to check whether the class of an item is the subclass of a given superclass (in the hierarchy of classes)
     //  let u = "https://database.factgrid.de/query/#ASK%20%7Bwd%3A" + a + "%20wdt%3AP3%2a%20wd%3A" + type + ".%7D%0A%20";
     let u = "https://database.factgrid.de/query/#ASK%20%7Bwd%3A" + a + "%20wdt%3AP2%2Fwdt%3AP3%2a%20wd%3A" + type + ".%7D%0A%20";
-    console.log(u);
     return u
   }
 
@@ -445,7 +438,6 @@ export class ItemSparqlService {
   }
 
   activitiesTest(item) {   // extract boolean test out of the array of activities for the right activity, used in 
-    console.log(item);
     let Q456376Tests = [];  // test for activity of creator
     let Q140759Tests = [] // test for activity of health care practioner 
     let masterTests = [];  // test for activity of master (professor, painter, physician)

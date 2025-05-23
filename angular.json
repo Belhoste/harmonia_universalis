@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "factgrid": {
+    "harmonia_universalis": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/factgrid",
+            "outputPath": "dist/harmonia_universalis",
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts",
@@ -67,7 +67,7 @@
                   "maximumError": "10kb"
                 }
               ],
-              "baseHref": "https://belhoste.github.io/factgridviewer/"
+              "baseHref": "https://belhoste.github.io/harmonia_universalis/"
             }
           },
           "defaultConfiguration": ""
@@ -75,19 +75,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "factgrid:build"
+            "buildTarget": "harmonia_universalis:build"
           },
           "configurations": {
             "production": {
               "proxyConfig": "src/proxy.conf.json",
-              "buildTarget": "factgrid:build:production"
+              "buildTarget": "harmonia_universalis:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "factgrid:build"
+            "buildTarget": "harmonia_universalis:build"
           }
         },
         "test": {
@@ -113,11 +113,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "factgrid:serve"
+            "devServerTarget": "harmonia_universalis:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "factgrid:serve:production"
+              "devServerTarget": "harmonia_universalis:serve:production"
             }
           }
         }

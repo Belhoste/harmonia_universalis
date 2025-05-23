@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ChangeDetectionStrategy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { SetDataService } from '../services/set-data.service';
@@ -12,18 +12,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, switchMap, tap, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule} from '@angular/material/form-field';
-import { JsonPipe } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
-import sortingAccessor from '../sortingAccessor';
 import { SelectedLangService } from '../selected-lang.service';
-
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface HU {
   author:{ label:string, id:string };
@@ -31,6 +28,13 @@ export interface HU {
   location:{ label:string, id:string };
   date:{ value:string };
 }
+
+const columnMapping = {
+  author: (data) => data.author?.label,
+  title: (data) => data.title?.label,
+  location: (data) => data.location?.label,
+  date: (data) => data.date?.value,
+};
 
 
 @Component({
@@ -50,34 +54,35 @@ export interface HU {
     FormsModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   templateUrl: './harmonia-universalis.component.html',
-  styleUrl: './harmonia-universalis.component.scss'
+  styleUrl: './harmonia-universalis.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class HarmoniaUniversalisComponent implements OnInit, AfterViewInit {
+export class HarmoniaUniversalisComponent implements OnInit {
   private database = inject(HuDatabaseService);
   private _liveAnnouncer = inject(LiveAnnouncer);
   private csv = inject(ArrayToCsvService);
   private lang = inject(SelectedLangService);
 
-
-  //sessionStorage['selectedPage'] = JSON.stringify([{name:'Harmonia Universalis', address:"harmonia_universalis"}]);
-
-
-  public readonly displayedColumns:string[] = ['author','title','place','date'];
+  public readonly displayedColumns:string[] = ['author','title','location','date'];
 
   dataSource: MatTableDataSource<HU> = new MatTableDataSource;
   dataSource$: Observable<any>;
 
   filtered;
 
+  isMobile = window.innerWidth <= 600;
+
+
   biblioHU:string = "Bibliography Harmonia Universalis";
 
   authorHeader:string ="Author";
   titleHeader:string = "Title";
-  locationHeader:string ="Place";
+  locationHeader:string ="Location";
   dateHeader:string ="Date";
 
   behavior$ = new BehaviorSubject<string>('');
@@ -93,33 +98,56 @@ export class HarmoniaUniversalisComponent implements OnInit, AfterViewInit {
 
   pageEvent:PageEvent;
 
-  isSpinner: boolean = false;
+  isSpinner: boolean = true;
 
   //selectedLang: string = (localStorage['selectedLang'] === undefined) ? "en" : localStorage['selectedLang'];
   myLang:string = "%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22"+this.lang.selectedLang+"%22%2C%22en%22.%20%7D%0A%7D%0A";
 
 
-  constructor() {
-
-    this.dataSource.sortingDataAccessor = (data, sortHeaderId) => { return sortingAccessor.nestedCaseInsensitive(data, sortHeaderId); }
-    this.dataSource.filterPredicate = (data, filter: string) => {
-      return data.author.label.toLocaleLowerCase().includes(filter) ||
-         //    data.author.id.toLocaleLowerCase().includes(filter) ||
-             data.title.label.toLocaleLowerCase().includes(filter) ||
-        //    data.title.id.toLocaleLowerCase().includes(filter)||
-           data.location.label.toLocaleLowerCase().includes(filter) ||
-        //     data.location.id.toLocaleLowerCase().includes(filter) ||
-            data.date.value.toLocaleLowerCase().includes(filter)
-    }    
-    };
-
 @ViewChild(MatSort)
 sort: MatSort;
 
 @ViewChild("paginator")
-paginator ;
+  paginator;
 
-ngOnInit() {
+  getHeaderLabel(column: string): string {
+    switch (column) {
+      case 'author': return this.authorHeader;
+      case 'title': return this.titleHeader;
+      case 'location': return this.locationHeader;
+      case 'date': return this.dateHeader;
+      default: return column;
+    }
+  }
+
+  ngOnInit() {
+
+    this.isSpinner = true; // Affiche le spinner
+    console.log('Spinner ON');
+
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 600;
+    });
+
+    this.dataSource.sortingDataAccessor = (data, sortHeaderId) =>
+      columnMapping[sortHeaderId]
+        ? columnMapping[sortHeaderId](data) || ''
+        : data[sortHeaderId] || '';
+
+    this.dataSource.sortData = (data, sort) => {   // pour tenir compte des accents et de la casse
+      const active = sort.active;
+      const direction = sort.direction;
+      if (!active || direction === '') {
+        return data;
+      }
+      return data.slice().sort((a, b) => {
+        const valueA = this.dataSource.sortingDataAccessor(a, active);
+        const valueB = this.dataSource.sortingDataAccessor(b, active);
+        // Utilise localeCompare pour un tri français insensible à la casse et aux accents
+        const comparison = (valueA as string).localeCompare(valueB as string, 'fr', { sensitivity: 'base' });
+        return direction === 'asc' ? comparison : -comparison;
+      });
+    };
 
   this.biblioHU = this.lang.biblioHU(this.biblioHU);
 
@@ -128,26 +156,33 @@ ngOnInit() {
   this.locationHeader = this.lang.locationHeader(this.locationHeader);
   this.dateHeader = this.lang.dateHeader(this.dateHeader);
   
+  let u = this.database.sparqlBuilding(this.myLang);
+  let sparqlApiUrl = this.database.newSparqlAdress(u);
 
-//this.isSpinner = true;
+  // Initialisation conditionnelle du cache
+  this.database.initBiblioData(sparqlApiUrl);
 
- // this.myLang = "%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22"+this.lang.selectedLang+"%22%2C%22en%22.%20%7D%0A%7D%0A";
+  let dataService$ = this.database.getBiblioData(); // observable sur la donnée en cache
 
-  let u =this.database.sparqlBuilding(this.myLang);
-  let dataService = this.database.databaseToDisplay(u);
-  let v$ = dataService.pipe(map(res => this.database.listFromSparql(res)));
 
-  this.dataSource$ = combineLatest([this.behavior$, v$]).pipe(map(res => {
-                     this.dataSource.filter = res[0]; this.dataSource.data = res[1];
-                     return this.dataSource })); 
+    this.dataSource$ = combineLatest([this.behavior$, dataService$]).pipe(
+      map(res => {
+        this.dataSource.filter = res[0];
+        this.dataSource.data = res[1];
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+       return this.dataSource }));
+
+    this.dataSource$.subscribe(res => {
+      console.log('Spinner OFF');
+      this.isSpinner = false;
+    
+      // Force la détection pour que MatSort prenne en compte les nouvelles données
+    //  this.cdr.detectChanges();
+    });
+
 }
 
-ngAfterViewInit() {
-
-this.dataSource.sort=this.sort;
-this.dataSource.paginator=this.paginator;
-
-}
 
 onClick(query){ //handling click for downlooding the filtered data
  let u= query;
@@ -175,4 +210,15 @@ setPageSizeOptions(setPageSizeOptionsInput: string) {
       this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
     }
   }
+
+setSort(column: string) {
+    if (this.sort.active === column) {
+      this.sort.direction = this.sort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sort.active = column;
+      this.sort.direction = 'asc';
+    }
+    this.sort.sortChange.emit({ active: this.sort.active, direction: this.sort.direction });
+  }
+
 }  

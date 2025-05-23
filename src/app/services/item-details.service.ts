@@ -4,7 +4,8 @@ import { FactgridSubtitlesService } from './factgrid-subtitles.service'
 import { QualifierDetailsService } from './qualifier-details.service';
 import { TypologyService } from './typology.service';
 import { ItemInfoService } from './item-info.service';
-import { LongestWordService } from './longest-word.service'
+import { LongestWordService } from './longest-word.service';
+import { ItemTalkService } from './item-talk.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class ItemDetailsService {
   private typology = inject(TypologyService);
   private itemInfo = inject(ItemInfoService);
   private longestLength = inject(LongestWordService);
+  private itemTalk = inject(ItemTalkService);
 
 
   private baseWikimediaURL = 'http://commons.wikimedia.org/wiki/Special:FilePath/';
@@ -241,6 +243,16 @@ export class ItemDetailsService {
     // re.info = this.itemInfo.infoListBuilding(re)
 
   }
+
+  addNoticeClaim(re: any, talk: { notice_HU: string }): any {
+    if (talk.notice_HU) {
+      // Transformation du texte wiki en HTML sécurisé
+      re.notice_HU = this.itemTalk.wikiToHtml(talk.notice_HU);
+    }
+    return re;
+  }
+
+
 
   setUrl(u, p) {
 

@@ -41,6 +41,17 @@ body {
   opacity: 1;
 }
 
+.notice-card {
+  margin: 2px; // marges externes très petites
+  background: #f5faff; // bleu très clair
+}
+
+.notice-card .mat-card-content {
+  padding: 28px 24px; // padding interne augmenté
+}
+
+
+
 
 
 /*.main {   // deprecate
