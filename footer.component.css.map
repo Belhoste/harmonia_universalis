@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/footer/footer.component.scss"],
-  "sourcesContent": [".footer {\n  width: 100%;\n  text-align: center;\n  padding: 1em 0;\n  background: #f5f5f5;\n  color: #555;\n  font-size: 0.95em;\n  position: fixed;\n  left: 0;\n  bottom: 0;\n  z-index: 100;\n  border-top: 1px solid #ddd;\n}\n\n.footer a {\n  color: #1976d2;\n  text-decoration: underline;\n}\n"],
-  "mappings": ";AAAA,CAAA;AACE,SAAA;AACA,cAAA;AACA,WAAA,IAAA;AACA,cAAA;AACA,SAAA;AACA,aAAA;AACA,YAAA;AACA,QAAA;AACA,UAAA;AACA,WAAA;AACA,cAAA,IAAA,MAAA;;AAGF,CAdA,OAcA;AACE,SAAA;AACA,mBAAA;;",
-  "names": []
-}
