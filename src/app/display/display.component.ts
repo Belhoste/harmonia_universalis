@@ -39,17 +39,16 @@ import { ItemDisplayDispatcherService } from './services/item-display-dispatcher
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-display',
-  templateUrl: 'display.component.html',
-  styleUrls: ['./display.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule, MatTabsModule, MatButtonModule, RouterModule, NgIf, MatProgressSpinnerModule, MatSidenavModule,
-    MatIconModule, MatCardModule, NgFor, NgClass, TextDisplayComponent, Sparql0DisplayComponent,
-    Sparql1DisplayComponent, Sparql2DisplayComponent, Sparql3DisplayComponent, Sparql4DisplayComponent,
-    ItemInfoComponent, MainDisplayComponent, HeaderDisplayComponent, SociabilityDisplayComponent,
-    SourcesDisplayComponent, EducationDisplayComponent, CareerDisplayComponent, IframesDisplayComponent, JoinPipe
-  ]
+    selector: 'app-display',
+    templateUrl: 'display.component.html',
+    styleUrls: ['./display.component.scss'],
+    imports: [
+        CommonModule, MatTabsModule, MatButtonModule, RouterModule, NgIf, MatProgressSpinnerModule, MatSidenavModule,
+        MatIconModule, MatCardModule, NgFor, NgClass, TextDisplayComponent, Sparql0DisplayComponent,
+        Sparql1DisplayComponent, Sparql2DisplayComponent, Sparql3DisplayComponent, Sparql4DisplayComponent,
+        ItemInfoComponent, MainDisplayComponent, HeaderDisplayComponent, SociabilityDisplayComponent,
+        SourcesDisplayComponent, EducationDisplayComponent, CareerDisplayComponent, IframesDisplayComponent, JoinPipe
+    ]
 })
 export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
 

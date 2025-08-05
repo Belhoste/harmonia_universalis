@@ -11,11 +11,10 @@ export interface IframeGroup {
 }
 
 @Component({
-  selector: 'app-iframes-display',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule],
-  templateUrl: './iframes-display.component.html',
-  styleUrl: './iframes-display.component.scss'
+    selector: 'app-iframes-display',
+    imports: [CommonModule, MatIconModule, MatCardModule],
+    templateUrl: './iframes-display.component.html',
+    styleUrl: './iframes-display.component.scss'
 })
 export class IframesDisplayComponent {
 

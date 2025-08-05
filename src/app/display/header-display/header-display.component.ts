@@ -7,11 +7,10 @@ import { UnitPipe } from '../../unit.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-header-display',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
-  templateUrl: './header-display.component.html',
-  styleUrl: './header-display.component.scss'
+    selector: 'app-header-display',
+    imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
+    templateUrl: './header-display.component.html',
+    styleUrl: './header-display.component.scss'
 })
 export class HeaderDisplayComponent {
 

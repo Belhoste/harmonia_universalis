@@ -9,11 +9,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
-  selector: 'app-career-display',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
-  templateUrl: './career-display.component.html',
-  styleUrl: './career-display.component.scss'
+    selector: 'app-career-display',
+    imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
+    templateUrl: './career-display.component.html',
+    styleUrl: './career-display.component.scss'
 })
 export class CareerDisplayComponent {
 

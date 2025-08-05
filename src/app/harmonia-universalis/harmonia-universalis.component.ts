@@ -38,28 +38,27 @@ const columnMapping = {
 
 
 @Component({
-  selector: 'app-harmonia-universalis',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatSortModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    RouterModule,
-    MatPaginatorModule,
-    MatInputModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
-  templateUrl: './harmonia-universalis.component.html',
-  styleUrl: './harmonia-universalis.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-harmonia-universalis',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatSortModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+        RouterModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule
+    ],
+    templateUrl: './harmonia-universalis.component.html',
+    styleUrl: './harmonia-universalis.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class HarmoniaUniversalisComponent implements OnInit {

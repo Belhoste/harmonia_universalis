@@ -18,8 +18,7 @@ export interface InfoList {
     selector: 'app-item-info',
     templateUrl: './item-info.component.html',
     styleUrls: ['./item-info.component.scss'],
-    standalone: true,
-    imports: [CommonModule, NgClass, MatCardModule, NgFor, NgIf, RouterLink, MatIconModule]
+    imports: [CommonModule, NgClass, MatCardModule, RouterLink, MatIconModule]
 })
 
 

@@ -13,8 +13,7 @@ import { ArrayToCsvService } from '../../services/array-to-csv.service';
 
 
 @Component({
-   selector: 'app-sparql3-display',
-   standalone: true,
+    selector: 'app-sparql3-display',
     imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule],
     templateUrl: './sparql3-display.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

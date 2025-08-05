@@ -36,25 +36,24 @@ export interface Qualifier {
 }
 
 @Component({
-  selector: 'app-statement-search',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatInputModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    NgxMatSelectSearchModule,
-    MatSelect,
-    MatCheckboxModule,
-    MatOption,
-    MatSlideToggleModule,
-  ],
-  templateUrl: './statement-search.component.html',
-  styleUrl: './statement-search.component.scss'
+    selector: 'app-statement-search',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatInputModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        NgxMatSelectSearchModule,
+        MatSelect,
+        MatCheckboxModule,
+        MatOption,
+        MatSlideToggleModule,
+    ],
+    templateUrl: './statement-search.component.html',
+    styleUrl: './statement-search.component.scss'
 })
 
 export class StatementSearchComponent

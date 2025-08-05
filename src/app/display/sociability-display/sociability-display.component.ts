@@ -7,11 +7,10 @@ import { UnitPipe } from '../../unit.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-sociability-display',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
-  templateUrl: './sociability-display.component.html',
-  styleUrl: './sociability-display.component.scss'
+    selector: 'app-sociability-display',
+    imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
+    templateUrl: './sociability-display.component.html',
+    styleUrl: './sociability-display.component.scss'
 })
 export class SociabilityDisplayComponent {
 

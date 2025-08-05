@@ -12,12 +12,11 @@ import { ArrayToCsvService } from '../../services/array-to-csv.service';
 
 
 @Component({
-  selector: 'app-sparql2-display',
-  standalone: true,
-  imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule],
-  templateUrl: './sparql2-display.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './sparql2-display.component.scss'
+    selector: 'app-sparql2-display',
+    imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule],
+    templateUrl: './sparql2-display.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrl: './sparql2-display.component.scss'
 })
 export class Sparql2DisplayComponent implements OnChanges, OnDestroy {
   private lang = inject(SelectedLangService);

@@ -7,11 +7,10 @@ import { UnitPipe } from '../../unit.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-education-display',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
-  templateUrl: './education-display.component.html',
-  styleUrl: './education-display.component.scss'
+    selector: 'app-education-display',
+    imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
+    templateUrl: './education-display.component.html',
+    styleUrl: './education-display.component.scss'
 })
 export class EducationDisplayComponent {
 

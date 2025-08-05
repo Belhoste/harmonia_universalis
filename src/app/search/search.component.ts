@@ -20,22 +20,21 @@ import { SelectedLangService } from '../selected-lang.service';
 
 
 @Component({
-  selector: 'app-search',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-  ],
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+    selector: 'app-search',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+    ],
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.scss']
 })
 
 

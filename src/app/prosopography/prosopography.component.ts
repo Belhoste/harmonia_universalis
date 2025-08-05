@@ -29,12 +29,11 @@ const columnMapping = {
 };
 
 @Component({
-  selector: 'app-prosopogra^phy',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatSelectModule, MatSortModule, MatProgressSpinnerModule, MatPaginatorModule, MatInputModule, RouterModule],
-  templateUrl: './prosopography.component.html',
-  styleUrl: './prosopography.component.scss'
+    selector: 'app-prosopogra^phy',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatSelectModule, MatSortModule, MatProgressSpinnerModule, MatPaginatorModule, MatInputModule, RouterModule],
+    templateUrl: './prosopography.component.html',
+    styleUrl: './prosopography.component.scss'
 })
 export class ProsopographyComponent implements OnInit, AfterViewInit {
 

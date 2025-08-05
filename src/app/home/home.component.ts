@@ -9,11 +9,10 @@ import { SelectedLangService } from '../selected-lang.service';
 
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [MatCardModule, MatButtonModule, RouterModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    imports: [MatCardModule, MatButtonModule, RouterModule],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   private huDatabase = inject(HuDatabaseService);

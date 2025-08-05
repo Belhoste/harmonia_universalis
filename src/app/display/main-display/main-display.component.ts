@@ -10,22 +10,21 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ObjectKeysPipe, FilterNotP499Pipe, OrderByP499Pipe } from '../../main-display.pipes';
 
 @Component({
-  selector: 'app-main-display',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatCardModule,
-    RouterLink,
-    RouterOutlet,
-    UnitPipe,
-    MatTooltipModule,
-    ObjectKeysPipe,
-    FilterNotP499Pipe,
-    OrderByP499Pipe
-  ],
-  templateUrl: './main-display.component.html',
-  styleUrl: './main-display.component.scss'
+    selector: 'app-main-display',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatCardModule,
+        RouterLink,
+        RouterOutlet,
+        UnitPipe,
+        MatTooltipModule,
+        ObjectKeysPipe,
+        FilterNotP499Pipe,
+        OrderByP499Pipe
+    ],
+    templateUrl: './main-display.component.html',
+    styleUrl: './main-display.component.scss'
 })
 export class MainDisplayComponent {
   @Input() mainList;

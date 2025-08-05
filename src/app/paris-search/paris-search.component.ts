@@ -21,22 +21,21 @@ import { SelectedLangService } from '../selected-lang.service';
 
 
 @Component({
-  selector: 'app-paris-search',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-  ],
-  templateUrl: './paris-search.component.html',
-  styleUrls: ['./paris-search.component.scss']
+    selector: 'app-paris-search',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+    ],
+    templateUrl: './paris-search.component.html',
+    styleUrls: ['./paris-search.component.scss']
 })
 
 

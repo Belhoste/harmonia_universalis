@@ -27,8 +27,7 @@ import { MutatorService } from './services/mutator.service'
 
 
 @Component({
-  selector: 'app-advanced-search',
-  standalone: true,
+    selector: 'app-advanced-search',
     imports: [
         CommonModule,
         RouterModule,

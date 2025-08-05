@@ -9,7 +9,6 @@ import { SetLanguageService } from './services/set-language.service';
 import { RequestService } from './services/request.service';
 import { SlideUpAnimation } from './slide-up-animation';
 import { RouterLink, RouterModule } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,8 +27,7 @@ export interface Lang {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     animations: [SlideUpAnimation],
-    standalone: true,
-    imports: [MatToolbarModule, MatButtonModule, MatMenuModule, MatIconModule, NgFor, NgIf, RouterModule, RouterLink, FooterComponent]
+    imports: [MatToolbarModule, MatButtonModule, MatMenuModule, MatIconModule, RouterModule, RouterLink, FooterComponent]
 })
 
 

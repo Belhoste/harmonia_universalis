@@ -15,7 +15,6 @@ import { ArrayToCsvService} from '../../services/array-to-csv.service';
     selector: 'app-sparql0-display',
     templateUrl: 'sparql0-display.component.html',
     styleUrls: ['sparql0-display.component.scss'],
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule]
 })

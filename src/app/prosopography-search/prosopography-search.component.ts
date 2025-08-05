@@ -38,22 +38,21 @@ function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 }
 
 @Component({
-  selector: 'app-prosopography-search',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-  ],
-  templateUrl: './prosopography-search.component.html',
-  styleUrls: ['./prosopography-search.component.scss']
+    selector: 'app-prosopography-search',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+    ],
+    templateUrl: './prosopography-search.component.html',
+    styleUrls: ['./prosopography-search.component.scss']
 })
 export class ProsopographySearchComponent implements OnInit {
   private changeDetector = inject(ChangeDetectorRef);

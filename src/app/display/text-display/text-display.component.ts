@@ -7,7 +7,6 @@ import { NgClass } from '@angular/common';
     selector: 'app-text-display',
     templateUrl: './text-display.component.html',
     styleUrls: ['./text-display.component.scss'],
-    standalone: true,
     imports: [NgClass, MatCardModule]
 })
 export class TextDisplayComponent implements OnChanges {

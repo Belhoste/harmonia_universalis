@@ -14,23 +14,21 @@ import { SetLanguageService } from '../../../services/set-language.service';
 import { SelectedLangService } from '../../../selected-lang.service';
 
 @Component({
-
-  selector: 'app-project-select',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatSelect,
-    NgxMatSelectSearchModule,
-  ],
-  templateUrl: './project-select.component.html',
-  styleUrl: './project-select.component.scss',
+    selector: 'app-project-select',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatSelect,
+        NgxMatSelectSearchModule,
+    ],
+    templateUrl: './project-select.component.html',
+    styleUrl: './project-select.component.scss'
 })
 
 export class ProjectSelectComponent implements OnInit, AfterViewInit, OnDestroy
