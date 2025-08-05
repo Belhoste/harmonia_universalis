@@ -1,11 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { SetTimeService } from './set-time.service';
 import { FactgridSubtitlesService } from './factgrid-subtitles.service'
-import { QualifierDetailsService } from './qualifier-details.service';
 import { TypologyService } from './typology.service';
 import { ItemInfoService } from './item-info.service';
-import { LongestWordService } from './longest-word.service';
-import { ItemTalkService } from './item-talk.service';
+import { LongestWordService } from './longest-word.service'
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +11,9 @@ import { ItemTalkService } from './item-talk.service';
 export class ItemDetailsService {
   private setDate = inject(SetTimeService);
   private factgrid = inject(FactgridSubtitlesService);
-  private qualifier = inject(QualifierDetailsService);
   private typology = inject(TypologyService);
   private itemInfo = inject(ItemInfoService);
   private longestLength = inject(LongestWordService);
-  private itemTalk = inject(ItemTalkService);
 
 
   private baseWikimediaURL = 'http://commons.wikimedia.org/wiki/Special:FilePath/';
@@ -26,34 +22,33 @@ export class ItemDetailsService {
 
   addLongestWordLength(re) { re.longestWordLength = this.longestLength.findLongestWord(re.label) };
 
-  addClaimItemDetails(items, re, itemProperties, lang) { // add labels, descriptions and aliases to the items in the mainsnaks   
+  addClaimItemDetails(items, re, itemProperties, lang) {
     for (let i = 0; i < itemProperties.length; i++) {
       let timeOrder = 23000000;
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
       re.claims[itemProperties[i]].datatype = re.claims[itemProperties[i]][0].mainsnak.datatype;
-      //     if(re.claims[itemProperties[i]][0].mainsnak.datatype =="external-id"){re.claims[itemProperties[i]].external ="1"}; // add external = "1" if external link property
       for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
         re.claims[itemProperties[i]][j].mainsnak.timeOrder = timeOrder;
         if (re.claims[itemProperties[i]][j].mainsnak.datatype === "time") {
           let value = re.claims[itemProperties[i]][j].mainsnak.datavalue.value.time;
           value = value.substring(0, value.length - 10);
           re.claims[itemProperties[i]][j].mainsnak.datavalue.value.date = this.setDate.setDate(value, lang);
-        }
-        //add typology, that is the nature of the item    
-        /*  if(itemProperties[i] === "P2"){
-            let u ="";
-           re.claims[itemProperties[i]][j].typology = this.typology.getValue(re.claims[itemProperties[i]][j].mainsnak.datavalue.value.id);
-         
-          }*/
-
+        };
+        if (re.claims[itemProperties[i]][j].mainsnak.datatype === "string") {
+          re.claims[itemProperties[i]][j].mainsnak.label = re.claims[itemProperties[i]][j].mainsnak.datavalue.value;
+        };
         if (itemProperties[i] === "P189" || itemProperties[i] === "P556" || itemProperties[i] === "P181" || itemProperties[i] === "P1267") {
           re.claims[itemProperties[i]][j].picture = this.baseWikimediaURL + re.claims[itemProperties[i]][j].mainsnak.datavalue.value
-        }
+        };
         if (itemProperties[i] === "P188") {
           let u = re.claims[itemProperties[i]][j].mainsnak.datavalue.value.substring(0, 5);
           if (u !== "http:") {
             re.claims[itemProperties[i]][j].picture = re.claims[itemProperties[i]][j].mainsnak.datavalue.value
           }
-        }
+        };
         if (itemProperties[i] === "P320") {
           re.claims[itemProperties[i]][j].mainsnak.datatype = "sparql";
           //   if(re.claims[itemProperties[i]][j].mainsnak.datavalue.value.includes("item")===false){ re.claims[itemProperties[i]][j].mainsnak.datavalue.value="undefined"};
@@ -66,6 +61,7 @@ export class ItemDetailsService {
         this.factgrid.setSubtitle2(re, itemProperties[i], number, lang)
         for (let k = 0; k < items.length; k++) {
           if (re.claims[itemProperties[i]][j].mainsnak.datavalue.value.id === items[k].id) {
+            //     re.claims[itemProperties[i]][j].mainsnak.id = items[k].id;
             re.claims[itemProperties[i]][j].mainsnak.label = items[k].label;
             if (items[k].description !== undefined)
               re.claims[itemProperties[i]][j].mainsnak.description = items[k].description;
@@ -79,70 +75,126 @@ export class ItemDetailsService {
     return re
   }
 
-  addQualifierItemDetails(items, re, itemProperties, lang) {//add labels, definitions and aliases of items in the qualifiers/*
-    //   console.log(items);
-    for (let i = 0; i < itemProperties.length; i++) {
-      for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
-        if (itemProperties[i] == "P2") { re.claims[itemProperties[i]][j].mainsnak.timeOrder = "0" };
-        if (re.claims[itemProperties[i]][j].qualifiers === undefined) { continue }
-        let props = Object.keys(re.claims[itemProperties[i]][j].qualifiers);
-        for (let k = 0; k < props.length; k++) {
-          for (let l = 0; l < props[k].length; l++) {
-            if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l] === undefined) { continue };
-            if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datatype === "time") {
-              let value = re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.time
-              value = value.substring(0, value.length - 10);
-              re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.date = this.setDate.setDate(value, lang);
-            }
-            if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datatype === "external-id") {
-              this.setUrl(re.claims[itemProperties[i]][j].qualifiers[props[k]][l], props[k]);
-            }
-            for (let m = 0; m < items.length; m++) {
-              if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.id !== items[m].id) { continue }
-              if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datatype === "wikibase-item") {
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.label = items[m].label;
-                //         if (items[k].description !== undefined)
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.description = items[m].description;
-                //       if (items[m].aliases !== undefined) {
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.aliases = items[m].aliases;
-                //          this.roleOfObjectRendering(re.claims[itemProperties[i]][j].qualifiers[props[k]][l]);      
-              }
-              if (re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datatype === "commonsMedia") {
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.label = items[m].label;
-                //        if (items[k].description !== undefined)
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.description = items[m].description;
-                //       if (items[k].aliases !== undefined)
-                re.claims[itemProperties[i]][j].qualifiers[props[k]][l].datavalue.value.aliases = items[m].aliases;
-              }
-            }
-          }
-        }
-        for (let k = 0; k < props.length; k++) { //to chronologically order the list of values for a given property           
-          if (re.claims[itemProperties[i]][j].qualifiers === undefined) { continue };
-          if (re.claims[itemProperties[i]][j].qualifiers[props[k]] === undefined) { continue };
-          if (re.claims[itemProperties[i]][j].qualifiers[props[k]][0].datatype === "time") {
-            re.claims[itemProperties[i]][j].mainsnak.timeOrder = re.claims[itemProperties[i]][j].qualifiers[props[k]][0].datavalue.value.time
-            let era = re.claims[itemProperties[i]][j].mainsnak.timeOrder.charAt(0);
-            re.claims[itemProperties[i]][j].mainsnak.timeOrder = Number(re.claims[itemProperties[i]][j].mainsnak.timeOrder.replace(/\-/g, "").replace(/\+/g, "").substring(0, 8));
+  /**
+   * Enrichit chaque statement avec qualifiers2 (pour l'affichage)
+   * et gère le tri chronologique via timeOrder si un qualifier de type "time" existe.
+   */
+  /**
+  * Enrichit chaque statement avec qualifiers2 (pour l'affichage).
+  * Pour chaque qualifier, ajoute dans display un objet enrichi (id, label, description, aliases...).
+  * Gère aussi le tri chronologique via timeOrder si un qualifier de type "time" existe.
+  */
+  addQualifierItemDetails(items, re, itemProperties, lang) {
+    for (const prop of itemProperties) {
+      if (!re.claims[prop]) continue;
+      for (const statement of re.claims[prop]) {
+        if (!statement.qualifiers || !statement.qualifiers2) continue;
 
-            if (era != "+") { re.claims[itemProperties[i]][j].mainsnak.timeOrder = -Math.abs(re.claims[itemProperties[i]][j].mainsnak.timeOrder) };
-            re.claims[itemProperties[i]].sort(function (a, b) {
-              if (a.mainsnak.timeOrder < b.mainsnak.timeOrder)
-                return -1;
-              if (a.mainsnak.timeOrder > b.mainsnak.timeOrder)
-                return 1;
-              return 0
-            })
+        // Pour chaque propriété de qualifier
+        for (const qualifier2 of statement.qualifiers2) {
+          const qualifierProp = qualifier2.id;
+          const qualifierValues = statement.qualifiers[qualifierProp];
+          if (!Array.isArray(qualifierValues)) continue;
+
+          // Préparation du display enrichi
+          const display = [];
+
+          for (const q of qualifierValues) {
+            if (!q) continue;
+            if (q.datatype === "wikibase-item" && q.datavalue?.value) {
+              const val = q.datavalue.value;
+              const enriched = items.find(it => it.id === val.id);
+              display.push({
+                id: val.id,
+                label: enriched?.label || val.label || val.id,
+                description: enriched?.description || val.description || "",
+                aliases: enriched?.aliases || val.aliases || [],
+                datatype: "wikibase-item",
+                separator: (enriched?.description || val.description) ? ", " : ""
+              });
+            } else if (q.datatype === "commonsMedia" && q.datavalue?.value) {
+              display.push({
+                label: q.datavalue.value.label || q.datavalue.value,
+                description: q.datavalue.value.description || "",
+                aliases: q.datavalue.value.aliases || [],
+                datatype: "commonsMedia"
+              });
+            } else if (q.datatype === "external-id" && q.datavalue?.value) {
+              display.push({
+                value: q.datavalue.value,
+                datatype: "external-id"
+              });
+            } else if (q.datatype === "time" && q.datavalue?.value) {
+              let value = q.datavalue.value.time;
+              value = value.substring(0, value.length - 10);
+              const date = this.setDate.setDate(value, lang);
+              statement.mainsnak.timeOrder = value;
+              let era = value.charAt(0);
+              statement.mainsnak.timeOrder = Number(value.replace(/\-/g, "").replace(/\+/g, "").substring(0, 8));
+              if (era !== "+") {
+                statement.mainsnak.timeOrder = -Math.abs(statement.mainsnak.timeOrder);
+              }
+              display.push({
+                value,
+                date,
+                datatype: "time"
+              });
+            } else if (q.datatype === "quantity" && q.datavalue?.value) {
+              // Gestion du type quantity
+              display.push({
+                amount: q.datavalue.value.amount,
+                unit: q.datavalue.value.unit,
+                datatype: "quantity"
+              });
+            } else if (q.datatype === "string" && q.datavalue?.value) {
+              display.push({
+                string: q.datavalue.value,
+                datatype: "string"
+              });
+            } else if (q.datatype === "monolingualtext" && q.datavalue?.value) {
+              display.push({
+                string: q.datavalue.value,
+                datatype: "monolingualtext"
+              });
+            } else if (q.datavalue?.value) {
+              display.push({
+                value: q.datavalue.value,
+                datatype: q.datatype || "unknown"
+              });
+            }
           }
+
+          // Ajoute le display enrichi à l'objet de qualifiers2
+          qualifier2.display = display;
+        }
+
+        // Si la propriété est "P2", on force timeOrder à "0"
+        if (prop === "P2") {
+          statement.mainsnak.timeOrder = "0";
         }
       }
+
+      // Tri chronologique des statements si un timeOrder a été trouvé
+      if (re.claims[prop].length > 1 && re.claims[prop][0].mainsnak.timeOrder !== undefined) {
+        re.claims[prop].sort((a, b) => {
+          if (a.mainsnak.timeOrder < b.mainsnak.timeOrder) return -1;
+          if (a.mainsnak.timeOrder > b.mainsnak.timeOrder) return 1;
+          return 0;
+        });
+      }
     }
-    this.qualifier.addQualifier2ItemDetails(re, itemProperties)
-    return re
+    return re;
   }
 
-  addReferenceItemDetails(items, re, itemProperties, lang) {  //add labels, definitions and aliases of items in the references
+
+
+
+  addReferenceItemDetails(items, re, itemProperties, lang) {
     for (let i = 0; i < itemProperties.length; i++) {
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
       for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
         if (re.claims[itemProperties[i]][j].references === undefined) { continue }
         for (let k = 0; k < re.claims[itemProperties[i]][j].references.length; k++) {
@@ -175,8 +227,9 @@ export class ItemDetailsService {
         }
       }
     }
-    return re
+    return re;
   }
+
 
   addReference2ItemDetails(items, re, itemProperties) { //add the items of the qualifiers to the array qualifiers     
 
@@ -199,7 +252,7 @@ export class ItemDetailsService {
                     else if (re.claims[itemProperties[i]][j].references[l].snaks[props[m]][n].datatype === "time") {
                       display.push(re.claims[itemProperties[i]][j].references[l].snaks[props[m]][n].datavalue.value.date)
                     }
-                     else { display.push(re.claims[itemProperties[i]][j].references[l].snaks[props[m]][n].datavalue.value) }
+                    else { display.push(re.claims[itemProperties[i]][j].references[l].snaks[props[m]][n].datavalue.value) }
                   }
                   re.claims[itemProperties[i]][j].references2[k][m].display = display
                 }
@@ -209,7 +262,7 @@ export class ItemDetailsService {
         }
       }
     }
-   // console.log(re);
+    // console.log(re);
     return re
   }
 
@@ -243,16 +296,6 @@ export class ItemDetailsService {
     // re.info = this.itemInfo.infoListBuilding(re)
 
   }
-
-  addNoticeClaim(re: any, talk: { notice_HU: string }): any {
-    if (talk.notice_HU) {
-      // Transformation du texte wiki en HTML sécurisé
-      re.notice_HU = this.itemTalk.wikiToHtml(talk.notice_HU);
-    }
-    return re;
-  }
-
-
 
   setUrl(u, p) {
 

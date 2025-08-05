@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterLink } from '@angular/router';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { SelectedLangService } from '../../selected-lang.service';
 import { ArrayToCsvService } from '../../services/array-to-csv.service';
@@ -14,7 +14,7 @@ import { ArrayToCsvService } from '../../services/array-to-csv.service';
 @Component({
   selector: 'app-sparql2-display',
   standalone: true,
-  imports: [MatCardModule, NgClass, NgFor, NgIf, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule],
+  imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, FormsModule],
   templateUrl: './sparql2-display.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './sparql2-display.component.scss'
@@ -65,7 +65,7 @@ export class Sparql2DisplayComponent implements OnChanges, OnDestroy {
 
       if (this.subTitle == "Q140759") {  //patients
         this.isWorks = true;
-        this.subTitle = this.lang.patientsTitle(this.patientsTitle);
+        this.subTitle = this.lang.getTranslation('patientsTitle', this.lang.selectedLang);
       }
       else {
         this.subTitle = "";

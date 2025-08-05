@@ -3,6 +3,8 @@ import { RequestService } from './request.service';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +43,9 @@ export class ItemTalkService {
     content = content.replace(
       /\[\[Item:([^\|\]]+)\|([^\]]+)\]\]/gi,
       (match, qid, label) =>
-        `<a href="https://database.factgrid.de/wiki/Item:${qid}" target="_blank" rel="noopener" style="text-decoration:underline; color:#1976d2;">${label}</a>`
+        `<a href="https://belhoste.github.io/harmonia_universalis/item/${qid}" target="_blank" rel="noopener" style="text-decoration:underline; color:#1976d2;">${label}</a>`
+      //       `<a href="${environment.baseItemUrl}${qid}" target="_blank" rel="noopener" style="text-decoration:underline; color:#1976d2;">${label}</a>`
+
     );
 
     // Titres niveau 2 : == Titre == (marge réduite)
@@ -54,6 +58,12 @@ export class ItemTalkService {
       /^===\s*(.*?)\s*===$/gm,
       '<div style="font-weight:bold; margin:0.2em 0 0.2em 1em;">$1</div>'
     );
+    // Titres niveau 4 : ==== Titre ==== (marge réduite, texte courant, italique)
+    content = content.replace(
+      /^====\s*(.*?)\s*====$/gm,
+      '<div style="font-style:italic; margin:0.2em 0 0.2em 2em;">$1</div>'
+    );
+
     // Gras : '''texte'''
     content = content.replace(/'''(.*?)'''/g, '<b>$1</b>');
     // Italique : ''texte''

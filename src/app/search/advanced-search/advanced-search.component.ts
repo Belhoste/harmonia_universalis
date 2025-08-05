@@ -59,7 +59,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
 
   title = 'factgrid';
-  subtitle: string = "a database for historians";
+  subTitle: string = "a database for historians";
   basic_search: string = "search";
   projects: string = "research projects";
   fields: string = "fields of reserach";
@@ -110,11 +110,12 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.subtitle = this.lang.subtitle(this.subtitle);
+   this.subTitle = this.lang.getTranslation('setTitle', this.lang.selectedLang);
+    
 
-    this.projects = this.lang.projects(this.projects);
+    this.projects = this.lang.getTranslation('projects',this.lang.selectedLang);
 
-    this.fields = this.lang.fields(this.fields);
+    this.fields = this.lang.getTranslation('fields', this.lang.selectedLang);
 
     this.projectList.projectsListBuilding("Q11295").subscribe(res => this.projectsList = res); // list of projects
 

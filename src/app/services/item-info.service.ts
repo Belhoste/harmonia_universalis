@@ -18,25 +18,20 @@ export class ItemInfoService {
 
   langService:string = "%20.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22"+this.lang.selectedLang+"%22%2C%22en%22.%20%7D%0A%7D%0A";
 
-  infoListBuilding(item) {
-    let id = item.id;
-    let instancesListQuery;
-    let subclassesListQuery:Observable<any> | undefined ;
-    let classesListQuery:Observable<any> | undefined ;
-    let natureOfListQuery:Observable<any> | undefined;
-    let infoList:any[];
+  infoListBuilding(item): Observable<any[]> {
+  let id = item[0].id;
+  let instancesListQuery = this.instancesListBuilding(id);
+  let subclassesListQuery = this.subclassesListBuilding(id);
+  let classesListQuery = this.classesListBuilding(id);
+  let natureOfListQuery = this.natureOfListBuilding(id);
 
-    instancesListQuery = this.instancesListBuilding(id);
-    subclassesListQuery = this.subclassesListBuilding(id)  ;
-    classesListQuery = this.classesListBuilding(id);
-    natureOfListQuery = this.natureOfListBuilding(id);
-  //  result=classesListQuery;
-   forkJoin([instancesListQuery,subclassesListQuery,classesListQuery,natureOfListQuery])
-  .subscribe(res => {infoList = res, item.infoList = infoList}); //ici on pourrait mettre un behaviorSubject pour l'infolist'
-   //item.infolist = result; // I made this change; to be checked .
-    //  return result  // the return does'nt seem to be necessary
-    
-    } 
+  return forkJoin([instancesListQuery, subclassesListQuery, classesListQuery, natureOfListQuery]).pipe(
+    map(res => {
+      item[0].infoList = res;
+      return res;
+    })
+  );
+}
 
   instancesListBuilding(id){
     let prefix = "https://database.factgrid.de/query/#SELECT%20%3Fitem%20%3FitemLabel%20%3FitemDescription%0AWHERE%20%7B%20%3Fitem%20wdt%3AP2%20wd%3A";
@@ -54,7 +49,8 @@ export class ItemInfoService {
     let u = this.newSparqlAddress(prefix+id+this.langService+suffix);
   //  return this.request.getList(u).pipe(map(res => this.listFromSparql(res)));
  //   let u = prefix + id + this.langService + suffix;
-    return this.request.getList(u).pipe(map(res => this.listFromSparql(res)));;
+    let v= this.request.getList(u).pipe(map(res => this.listFromSparql(res)));
+    return v
      } 
      
   classesListBuilding(id){
@@ -86,8 +82,7 @@ export class ItemInfoService {
     return res.results.bindings
   }
 
- newSparqlAddress(address:string) : string { 
-     
+ newSparqlAddress(address:string) : string {    
     const newPrefix = "https://database.factgrid.de/sparql?query=";
     let oldPrefix = "https://database.factgrid.de/query/#";
     if (address.includes('embed.html')){oldPrefix ="https://database.factgrid.de/query/embed.html#"};

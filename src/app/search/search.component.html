@@ -11,12 +11,12 @@
  <mat-card  appearance="outlined" class=mat-elevation-z12>
        <mat-card-content  class="cardBackground">
         <div class="FactGridTitle">FactGrid</div>
-        <div class="subTitle">{{subtitle}}</div>
+        <div class="subTitle">{{subTitle}}</div>
        </mat-card-content>
 -->
  <div class="cardBackground">
         <div class="HUTitle">FactGrid</div>
-        <div class="subTitle">{{subtitle}}</div>
+        <div class="subTitle">{{subTitle}}</div>
 </div>
 
 <mat-card  appearance="outlined" class=mat-elevation-z12>
@@ -35,7 +35,7 @@
            @if (isDisplay == true) {
              <div class="searchListSize">   <!--  class="searchListSize" seems to be useless -->
                 <div class="details">
-                      @for (item of items; track item) {
+                      @for (item of items; track item.id) {
                           <div>
                             <span class="search-label">{{item.label}}&nbsp;</span>
                             <mat-icon-button class="internalLink" [routerLink]="['/item',item.id]"><mat-icon color="primary" [inline]="true">open_in_new</mat-icon></mat-icon-button>&nbsp;&nbsp;&nbsp;       

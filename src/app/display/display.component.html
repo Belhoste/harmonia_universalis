@@ -15,11 +15,16 @@
 <body>
 
 
-    <div class="center">
-      
-        <button mat-button color="primary" class="mat-typography" routerLink='/'>{{newSearch}}</button>
-      
-    </div>
+  <div class="center">
+
+    <button mat-button color="primary" class="mat-typography"
+            [routerLink]="from === 'paris' ? '/paris' : '/'">
+      {{newSearch}}
+    </button>
+
+
+
+  </div>
 
     <div class="spinner">
       @if (isSpinner) {
@@ -32,9 +37,14 @@
       <mat-drawer-container class="drawer-container">
         <mat-drawer #drawer mode="push">
           <div class="ground-div0">
-            <div class="icon mat-button" style="display: flex; align-items: center;">
-              <span class="blueButton">{{mainPage}}</span><button mat-icon-button (click)="drawer.toggle()"><mat-icon class="blueButton">chevron_right</mat-icon></button>
+            <div class="icon mat-button"
+                 style="display: flex; align-items: center; justify-content: flex-end;">
+              <span class="blueButton">{{mainPage}}</span>
+              <button mat-icon-button (click)="drawer.toggle()">
+                <mat-icon class="blueButton">chevron_right</mat-icon>
+              </button>
             </div>
+
           </div>
           <div>
           <mat-card appearance="outlined" class=mat-elevation-z12>
@@ -71,9 +81,10 @@
                   <div class="cardBackground">
 
                     <mat-card-content>
-                      <div class="itemTitle">
-                        <span>{{ label }}</span>
-                      </div>
+                      
+                        <div class="itemTitle" [attr.lang]="selectedLang === 'de' ? 'de' : null">{{ label }}</div>
+
+                      
                       <div [ngClass]="isAliases ? 'hide-division':'show-division'" class="aliases">
                         {{ aliases | join }}
                       </div>
@@ -100,7 +111,7 @@
                                loading="lazy"
                                alt="Image description"
                                (error)="onImageError($event)"
-                               (click)="openImage(picture.picture)" />
+                               (click)="openImage(picture.full)" />
                           <!--                  </mat-card>   -->
                         </div>
                       </div>
@@ -114,16 +125,6 @@
               <div>
               </div>
 
-              <!--**********************section Notice HU                         ------>
-              @if (isNotice) {
-              <mat-card class="notice-card mat-elevation-z8">
-                <mat-card-content>
-                  <div [innerHTML]="item[0].notice_HU"></div>
-                </mat-card-content>
-              </mat-card>
-              }
-
-
               <!--********************** section Main  *********************** -->
 
 
@@ -132,6 +133,8 @@
                   <app-main-display [mainList]="this.mainList" [mainTitle]="this.mainTitle" [list]="this.list"></app-main-display>
                 </mat-card>
               </div>
+
+
 
               <!--************************ end of main section *********************-->
               @if (this.trans !== "") {   <app-text-display [trans]="this.trans"></app-text-display>   } <!----transcription-->
@@ -164,9 +167,7 @@
 
               <div class="matCardPadding" [ngClass]="isIframes ? 'show-division':'hide-division'">
                 <mat-card appearance="outlined" class=mat-elevation-z12>
-                  <app-iframes-display [claims]="this.claims" [urlSafe1]="this.urlSafe1" [urlSafe2]="this.urlSafe2" [urlSafe3]="this.urlSafe3" [urlSafe4]="this.urlSafe4" [urlSafe5]="this.urlSafe5"
-                                       [urlSafe6]="this.urlSafe6" [urlSafe7]="this.urlSafe7" [urlSafe8]="this.urlSafe8" [urlSafe9]="this.urlSafe9" [urlSafe10]="this.urlSafe10"
-                                       [urlSafe11]="this.urlSafe11" [urlSafe12]="this.urlSafe12" [urlSafe13]="this.urlSafe13" [urlSafe14]="this.urlSafe14" [urlSafe15]="this.urlSafe15"></app-iframes-display>
+                  <app-iframes-display [iframeGroups]="iframeGroups"></app-iframes-display>
                 </mat-card>
               </div>
 
@@ -199,7 +200,7 @@
 
               <!-- ******************************* section Sources ****************************************  -->
 
-              <div [ngClass]="isSources ? 'show-division':'hide-division'">
+              <div [ngClass]="isSource ? 'show-division':'hide-division'">
                 <mat-card appearance="outlined" class=mat-elevation-z12>
                   <app-sources-display [sourcesList]="this.sourcesList" [sources]="this.sources"></app-sources-display>
                 </mat-card>
@@ -212,25 +213,24 @@
     </mat-card>
   </div>-->
               <!-- ******************************* Info ****************************************  -->
-              <mat-card appearance="outlined" class=mat-elevation-z12>
+              <mat-card appearance="outlined" class="mat-elevation-z12">
                 <div>
                   <div class="ground-div2">
-                    @if (isInfo===false) {
-                    <div class="mat-button.mat-small">
-                      <button mat-icon-button (click)="onClick4()" class="icon whiteText"><mat-icon class="icon whiteButton">expand_less</mat-icon></button>
+                    <div class="mat-button mat-small">
+                      <button mat-icon-button (click)="toggleInfo()" class="icon whiteText">
+                        <mat-icon class="icon whiteButton">
+                          {{ isInfo ? 'expand_less' : 'expand_more' }}
+                        </mat-icon>
+                      </button>
                     </div>
-                    }
-                    @if (isInfo===true) {
-                    <div class="icon" class="mat-button.mat-small">
-                      <button mat-icon-button (click)="onClick5()" class="whiteText"><mat-icon class="whiteButton">expand_more</mat-icon></button>
-                    </div>
-                    }
                   </div>
-                  <div class="ground-div2" [ngClass]="isInfo ? 'hide-division':'show-division'">
-                    <app-item-info [technicalities]="this.technicalities" [classesList]="this.classesList" [instancesList]="this.instancesList" [subclassesList]="this.subclassesList" [natureOfList]="this.natureOfList"></app-item-info>
+                  <div class="ground-div2" [ngClass]="isInfo ? 'show-division' : 'hide-division'">
+                    <app-item-info [infoList]="infoList"></app-item-info>
+
                   </div>
                 </div>
               </mat-card>
+
             </div>
 
               <!-- ****************************************** Pictures ****************************************  -->
@@ -249,7 +249,7 @@
                            alt="Image description"
                            (load)="onThumbnailLoad(picture)"
                            (error)="onImageError($event)"
-                           (click)="openImage(picture.picture)" />
+                           (click)="openImage(picture.full)" />
 
                       <!---</mat-card> --->
                     </div>

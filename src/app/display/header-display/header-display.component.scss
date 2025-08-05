@@ -1,0 +1,26 @@
+.p131-toggle-label {
+  color: #3F51B5; // couleur de la palette principale
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.p131-toggle-label .triangle-icon {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 7px solid #3F51B5; // bleu palette
+  transition: transform 0.2s;
+}
+
+.p131-toggle-label .triangle-icon.open {
+  transform: rotate(90deg);
+}
+
+.p131-toggle-label .propertyStyle {
+  color: #3F51B5 !important;
+}

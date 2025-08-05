@@ -67,7 +67,7 @@
                   "maximumError": "10kb"
                 }
               ],
-              "baseHref": "https://belhoste.github.io/harmonia_universalis/"
+              "baseHref": "/harmonia_universalis/"
             }
           },
           "defaultConfiguration": ""

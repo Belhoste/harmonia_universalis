@@ -83,7 +83,7 @@ export class ParisSearchComponent implements OnInit {
     if(this.selectedLang === "it") {this.formerVisitsTitle = "hai visitato :"}
     */
 
-    this.formerVisitsTitle = this.lang.formerVisitsTitle(this.formerVisitsTitle);
+      this.formerVisitsTitle = this.lang.getTranslation('formerVisitsTitle', this.lang.selectedLang);
 
     this.labels = this.searchInput.valueChanges   //search engine
     .pipe(

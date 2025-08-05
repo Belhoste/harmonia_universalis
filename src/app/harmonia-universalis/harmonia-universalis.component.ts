@@ -149,12 +149,12 @@ sort: MatSort;
       });
     };
 
-  this.biblioHU = this.lang.biblioHU(this.biblioHU);
+  this.biblioHU = this.lang.getTranslation('biblioHu',this.lang.selectedLang);
 
-  this.authorHeader = this.lang.authorHeader(this.authorHeader);
-  this.titleHeader = this.lang.titleHeader(this.titleHeader);
-  this.locationHeader = this.lang.locationHeader(this.locationHeader);
-  this.dateHeader = this.lang.dateHeader(this.dateHeader);
+  this.authorHeader = this.lang.getTranslation('authorHeader', this.lang.selectedLang);
+    this.titleHeader = this.lang.getTranslation('titleHeader', this.lang.selectedLang);
+    this.locationHeader = this.lang.getTranslation('locationHeader', this.lang.selectedLang);
+    this.dateHeader = this.lang.getTranslation('dateHeader', this.lang.selectedLang);
   
   let u = this.database.sparqlBuilding(this.myLang);
   let sparqlApiUrl = this.database.newSparqlAdress(u);

@@ -1,37 +1,29 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { UnitPipe } from '../../unit.pipe';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+export interface IframeGroup {
+  property: string;
+  label: string;
+  claims: any[];
+}
 
 @Component({
   selector: 'app-iframes-display',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe],
+  imports: [CommonModule, MatIconModule, MatCardModule],
   templateUrl: './iframes-display.component.html',
   styleUrl: './iframes-display.component.scss'
 })
 export class IframesDisplayComponent {
 
-@Input() claims
-@Input() urlSafe1
-@Input() urlSafe2
-@Input() urlSafe3
-@Input() urlSafe4
-@Input() urlSafe5
-@Input() urlSafe6
-@Input() urlSafe7
-@Input() urlSafe8
-@Input() urlSafe9
-@Input() urlSafe10
-@Input() urlSafe11
-@Input() urlSafe12
-@Input() urlSafe13
-@Input() urlSafe14
-@Input() urlSafe15
+  @Input() iframeGroups: IframeGroup[] = [];
 
+  constructor(private sanitizer: DomSanitizer) {}
 
-
-
+  sanitize(url: string): SafeResourceUrl {
+    return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : '';
+  }
 }

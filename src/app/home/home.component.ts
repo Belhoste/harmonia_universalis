@@ -7,6 +7,7 @@ import { ProsopoDatabaseService } from  '../prosopography/prosopo-database.servi
 import { SelectedLangService } from '../selected-lang.service';
 
 
+
 @Component({
   selector: 'app-home',
   standalone: true,

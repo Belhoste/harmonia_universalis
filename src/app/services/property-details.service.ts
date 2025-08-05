@@ -7,10 +7,15 @@ export class PropertyDetailsService {
 
   constructor() { }
 
-  addClaimPropertyDetails(properties, re, itemProperties) { // add labels, descriptions and aliases to the properties in the mainsnaks
+  addClaimPropertyDetails(properties, re, itemProperties) {
     for (let i = 0; i < itemProperties.length; i++) {
-      for (let j = 0; j < properties.length; j++) {     
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
+      for (let j = 0; j < properties.length; j++) {
         if (itemProperties[i] === properties[j].id) {
+          re.claims[itemProperties[i]].id = properties[j].id;
           re.claims[itemProperties[i]].label = properties[j].label;
           if (properties[j].description !== undefined)
             re.claims[itemProperties[i]].description = properties[j].description;
@@ -21,12 +26,17 @@ export class PropertyDetailsService {
         }
       }
     }
-    return re
+    return re;
   }
 
-  addQualifierPropertyDetails(properties, re, itemProperties) {  //add labels, definitions and aliases of properties in the qualifiers/* 
+
+  addQualifierPropertyDetails(properties, re, itemProperties) {
     let qualifierPropertyArray = [];
     for (let i = 0; i < itemProperties.length; i++) {
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
       for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
         if (re.claims[itemProperties[i]][j].qualifiers === undefined) { continue }
         qualifierPropertyArray = Object.keys(re.claims[itemProperties[i]][j].qualifiers);
@@ -45,44 +55,74 @@ export class PropertyDetailsService {
             }
           }
         }
-
       }
     }
     return [re, qualifierPropertyArray]
   }
 
-  addQualifier2PropertyDetails(properties, re, itemProperties) {  //add id, labels, definitions and aliases of properties to the new array qualifiers2/* 
-    let qualifier2PropertyArray = [];
-    let qualifier2: any[] = [];
-    for (let i = 0; i < itemProperties.length; i++) {
-      for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
-        if (re.claims[itemProperties[i]][j].qualifiers !== undefined) {
-          re.claims[itemProperties[i]][j].qualifiers2 = [];
-          qualifier2PropertyArray = re.claims[itemProperties[i]][j]["qualifiers-order"];
-          for (let k = 0; k < qualifier2PropertyArray.length; k++) {
-            qualifier2[k] = { id: undefined, label: undefined, description: undefined, aliases: undefined, value: { id: undefined, time: undefined, string: undefined, label: undefined, description: undefined, aliases: undefined } };
-            for (let l = 0; l < properties.length; l++) {
-              if (re.claims[itemProperties[i]][j]["qualifiers-order"][k] !== properties[l].id) { continue }
-              qualifier2[k].id = properties[l].id;
-              qualifier2[k].label = properties[l].label
-              if (properties[l].description !== undefined)
-                qualifier2[k].description = properties[l].description;
-              if (properties[l].aliases !== undefined)
-                qualifier2[k].aliases = properties[l].aliases;
-              if (properties[l].externalLink !== undefined)
-                qualifier2[k].externalLink = properties[l].externalLink;
 
-              re.claims[itemProperties[i]][j].qualifiers2.push(qualifier2[k])
+  /**
+  * Ajoute à chaque statement un tableau qualifiers2 enrichi avec les métadonnées
+  * (id, label, description, aliases, externalLink) des propriétés de qualifiers,
+  * en respectant l'ordre défini dans "qualifiers-order".
+  *
+  * @param properties      Liste des propriétés enrichies (avec label, description, etc.)
+  * @param re              L'objet item à enrichir
+  * @param itemProperties  Liste des propriétés à traiter (ex: ["P247", ...])
+  * @returns               L'objet item enrichi
+  */
+
+
+  addQualifier2PropertyDetails(properties, re, itemProperties) {
+    for (let i = 0; i < itemProperties.length; i++) {
+      const prop = itemProperties[i];
+      if (!re.claims[prop]) continue;
+
+      for (let j = 0; j < re.claims[prop].length; j++) {
+        const statement = re.claims[prop][j];
+        if (!statement.qualifiers) continue;
+
+        statement.qualifiers2 = [];
+        const qualifierOrder = statement["qualifiers-order"];
+        if (!Array.isArray(qualifierOrder)) continue;
+
+        for (let k = 0; k < qualifierOrder.length; k++) {
+          const qualifierId = qualifierOrder[k];
+          const propertyMeta = properties.find(p => p.id === qualifierId);
+
+          // Toujours créer un nouvel objet pour chaque qualifier2
+          const qualifier2Obj = {
+            id: propertyMeta ? propertyMeta.id : qualifierId,
+            label: propertyMeta ? propertyMeta.label : qualifierId,
+            description: propertyMeta ? propertyMeta.description : "",
+            aliases: propertyMeta ? propertyMeta.aliases : [],
+            externalLink: propertyMeta ? propertyMeta.externalLink : undefined,
+            value: {
+              id: undefined,
+              time: undefined,
+              string: undefined,
+              label: undefined,
+              description: undefined,
+              aliases: undefined
             }
-          }
+          };
+
+          statement.qualifiers2.push(qualifier2Obj);
         }
       }
     }
-    return re
+    return re;
   }
 
-  addReferencePropertyDetails(properties, re, itemProperties) {  //add labels, definitions and aliases of properties in the references
+
+
+
+  addReferencePropertyDetails(properties, re, itemProperties) {
     for (let i = 0; i < itemProperties.length; i++) {
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
       for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
         if (re.claims[itemProperties[i]][j].references === undefined) { continue }
         for (let k = 0; k < re.claims[itemProperties[i]][j].references.length; k++) {
@@ -105,23 +145,27 @@ export class PropertyDetailsService {
         }
       }
     }
-    return re
+    return re;
   }
 
-  addReference2PropertyDetails(properties, re, itemProperties) {  //add labels, definitions and aliases of properties to the new array references2
-    let references2PropertyArray = [];// à verifier si c'est correct; peut-être plusieurs arrays de propriétés
+  addReference2PropertyDetails(properties, re, itemProperties) {
+    let references2PropertyArray = [];
     let references2: any[] = [];
     for (let i = 0; i < itemProperties.length; i++) {
+      // Vérifie que la propriété existe et est un tableau non vide
+      if (!re.claims[itemProperties[i]] || !Array.isArray(re.claims[itemProperties[i]]) || re.claims[itemProperties[i]].length === 0) {
+        continue;
+      }
       for (let j = 0; j < re.claims[itemProperties[i]].length; j++) {
         if (re.claims[itemProperties[i]][j].references === undefined) { continue }
         re.claims[itemProperties[i]][j].references2 = [];
-        for (let k = 0; k < re.claims[itemProperties[i]][j].references.length; k++) {  //boucle sur les references relatives au claim itemProperties[i][j]
+        for (let k = 0; k < re.claims[itemProperties[i]][j].references.length; k++) {
           re.claims[itemProperties[i]][j].references2[k] = [];
           references2[k] = [];
           let props = re.claims[itemProperties[i]][j].references[k]["snaks-order"];
           for (let r = 0; r < props.length; r++) {
-            let reference = re.claims[itemProperties[i]][j].references[k].snaks[props[r]][0]; //ici on sélectionne l'array des propriétés relatives aux références ci-dessus
-            references2[k][r] = { datatype: undefined, id: undefined, label: undefined, description: undefined, aliases: undefined };   //ici on définit l'objet item reference                                                
+            let reference = re.claims[itemProperties[i]][j].references[k].snaks[props[r]][0];
+            references2[k][r] = { datatype: undefined, id: undefined, label: undefined, description: undefined, aliases: undefined };
             references2[k][r].datatype = reference.datatype;
             references2[k][r].id = reference.property;
             references2[k][r].label = reference.label;
@@ -131,11 +175,12 @@ export class PropertyDetailsService {
               references2[k][r].aliases = reference.aliases;
             if (reference.externalLink !== undefined)
               references2[k][r].externalLink = reference.externalLink;
-            re.claims[itemProperties[i]][j].references2[k].push(references2[k][r]); //ici je peuple references2 avec les l items
+            re.claims[itemProperties[i]][j].references2[k].push(references2[k][r]);
           }
         }
       }
     }
-    return re
+    return re;
   }
+
 }

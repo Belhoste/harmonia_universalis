@@ -11,6 +11,8 @@ export class WikiDisplayService {
 
   setWikiDisplay(item, wikis) {
 
+    if (item[0].sitelinks !== undefined) {
+
     if (item[0].sitelinks.commonswiki !== undefined) {
       wikis.push(item[0].sitelinks.commonswiki);
     }
@@ -52,6 +54,7 @@ export class WikiDisplayService {
       this.url = "https://fr.wikisource.org/wiki/" + this.url;
       item[0].sitelinks.frwikisource.url=this.url;
       wikis.push(item[0].sitelinks.frwikisource);
+      }
     }
     return wikis
   }

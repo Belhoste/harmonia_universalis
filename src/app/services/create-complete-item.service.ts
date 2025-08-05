@@ -18,14 +18,19 @@ export class CreateCompleteItemService {
   private lang = inject(SelectedLangService);
 
 
-  completeItem(res) { 
- 
-    let u = this.createItem.createItemToDisplay(res = this.setLanguage.item(res, this.lang.selectedLang)[0], this.lang.selectedLang);
-  
-    this.itemInfo.infoListBuilding(res);
+completeItem(res) {
+  const itemArray = this.setLanguage.item(res, this.lang.selectedLang);
+  const firstItem = itemArray[0];
 
-    this.itemSparql.itemSparql(res);  
+  // Lancement de l'enrichissement SPARQL (en arrière-plan)
+  this.itemSparql.itemSparql(firstItem).subscribe({
+    error: err => console.error('Error while populating SPARQL data:', err)
+  });
 
-  return u
-  }
+  return this.itemInfo.infoListBuilding(itemArray).pipe(
+    switchMap(() =>
+      this.createItem.createItemToDisplay(firstItem, this.lang.selectedLang)
+    )
+  );
+}
 }

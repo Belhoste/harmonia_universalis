@@ -51,7 +51,7 @@ export class SearchComponent implements OnInit {
   //  selectedLang: string = (localStorage['selectedLang']===undefined)? "en": localStorage['selectedLang']; //initialization of the storage of the selected language (english)
 
     title = 'harmoniaUniversalis';
-    subtitle:string = "a database on animal magnetism";
+    subTitle:string = "a database on animal magnetism";
     advanced_search:string = "advanced search";
     projects:string = "research projects";
     fields: string = "fields of reserach";
@@ -86,15 +86,15 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.subtitle = this.lang.subtitle(this.subtitle);
+    this.subTitle = this.lang.getTranslation('setTitle', this.lang.selectedLang);
 
-    this.advanced_search = this.lang.advanced_search(this.advanced_search);
+    this.advanced_search = this.lang.getTranslation('advanced_search',this.lang.selectedLang);
 
-    this.projects = this.lang.projects(this.projects);
+    this.projects = this.lang.getTranslation('projects',this.lang.selectedLang);
 
-    this.fields = this.lang.fields(this.fields);
+    this.fields = this.lang.getTranslation('fields',this.lang.selectedLang);
 
-    this.formerVisitsTitle = this.lang.formerVisitsTitle(this.formerVisitsTitle)
+    this.formerVisitsTitle = this.lang.getTranslation('formerVisitsTitle',this.lang.selectedLang)
 
     this.selectedItemsList = this.selectedItemsList.filter(function (el) { return (el !== null) });
 

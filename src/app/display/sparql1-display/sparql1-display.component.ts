@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterLink } from '@angular/router';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { SelectedLangService } from '../../selected-lang.service';
 import { ArrayToCsvService } from '../../services/array-to-csv.service';
@@ -17,7 +17,7 @@ import { ArrayToCsvService } from '../../services/array-to-csv.service';
   styleUrls: ['sparql1-display.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCardModule, NgClass, NgFor, NgIf, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule]
+  imports: [MatCardModule, NgClass, RouterLink, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule]
 })
 export class Sparql1DisplayComponent implements OnChanges, OnDestroy {
   private lang = inject(SelectedLangService);
@@ -72,43 +72,44 @@ export class Sparql1DisplayComponent implements OnChanges, OnDestroy {
 
       if (this.subTitle == "Q8") {  //location
         this.isWorks = true;
-        this.subTitle = this.lang.buildingTitle(this.buildingTitle);
+        this.subTitle = this.lang.getTranslation('buildingTitle', this.lang.selectedLang);
       }
       else {
         if (this.subTitle == "Q24499") { //family name
           this.isWorks = false;
-          this.subTitle = this.lang.familyNameTitle(this.familyNameTitle);
+          this.subTitle = this.lang.getTranslation("familyNameTitle", this.lang.selectedLang);
+          console.log(this.subTitle);
         }
         else {
           if (this.subTitle == "Q12") { //organisation
             this.isWorks = false;
             if (this.list[0] && this.list[0].activity) {  // people active in this organisation
-              this.subTitle = this.lang.activityTitle(this.activityTitle);
+              this.subTitle = this.lang.getTranslation('activityTitle', this.lang.selectedLang);
             }
             else {   //people members of this organisation
               this.isWorks = true;
-              this.subTitle = this.lang.organisationTitle(this.organisationTitle);
+              this.subTitle = this.lang.getTranslation('organisationTitle', this.lang.selectedLang);
             }
           }
           else {
             if (this.subTitle == "Q37073") { //activity
               this.isWorks = true;
-              this.subTitle = this.lang.activityTitle(this.activityTitle);
+              this.subTitle = this.lang.getTranslation('activityTitle', this.lang.selectedLang);
             }
             else {
               if (this.subTitle == "Q16200") {  //address
                 this.isWorks = true;
-                this.subTitle = this.lang.addressTitle(this.addressTitle);
+                this.subTitle = this.lang.getTranslation('addressTitle', this.lang.selectedLang);
               }
               else {
                 if (this.subTitle == "Q456376") { //author
                   this.isWorks = true;
-                  this.subTitle = this.lang.workTitle(this.workTitle);
+                  this.subTitle = this.lang.getTranslation('workTitle', this.lang.selectedLang);
                 }
                 else {
                   if (this.subTitle = "Q172192") { //list
                     this.isWorks = true;
-                    this.subTitle = this.lang.listTitle(this.listTitle);
+                    this.subTitle = this.lang.getTranslation('listTitle', this.lang.selectedLang);
                   }
                   else {
                     this.subTitle = "";
