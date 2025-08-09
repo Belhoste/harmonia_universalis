@@ -8,7 +8,7 @@ export interface HUEntry {
   author: { id: string; label: string } | undefined;
   title: { id: string; label: string } | undefined;
   location: { id: string; label: string } | undefined;
-  country: { id: string; label: string } | undefined;
+  country?: { id: string; label: string } | undefined;
   date: { value: string };
 }
 
@@ -62,8 +62,7 @@ WHERE {
   listFromSparql(res: any): HUEntry[] {
     if (!res?.results?.bindings) return [];
 
-    // Transformation des bindings en HUEntry
-    const entries = res.results.bindings.map(binding => ({
+    return res.results.bindings.map(binding => ({
       author: binding.author ? {
         id: binding.author.value.replace("https://database.factgrid.de/entity/", ""),
         label: binding.authorLabel?.value || ""
@@ -84,18 +83,7 @@ WHERE {
         value: binding.date?.value ? binding.date.value.slice(0, 4) : ""
       }
     }));
-
-    // Suppression des doublons sur title.id
-    const seen = new Set<string>();
-    return entries.filter(entry => {
-      if (!entry.title?.id) return true;
-      if (seen.has(entry.title.id)) return false;
-      seen.add(entry.title.id);
-      return true;
-    });
   }
-
-
 
   // Cette méthode retourne l'observable
   databaseToDisplay(sparql: string): Observable<HUEntry[]> {

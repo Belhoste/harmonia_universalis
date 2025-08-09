@@ -29,6 +29,7 @@ export interface HU {
   author: { label: string, id: string };
   title: { label: string, id: string };
   location: { label: string, id: string };
+  country?: { label: string, id: string }; 
   date: { value: string };
 }
 
@@ -278,27 +279,31 @@ export class BibliographyComponent implements OnInit, AfterViewInit {
   }
 
   // Dans la méthode loadFirstBatch()
-  private loadFirstBatch() {
+ private loadFirstBatch() {
     this.isSpinner = true;
-    this.loadingMessage 
+    this.loadingMessage;
     this.cdr.markForCheck();
 
     console.log('Début du chargement de la bibliographie');
     const sparqlQuery = this.database.sparqlBuilding(this.myLang, this.batchSize, 0);
-    console.log('sparqlQuery générée:', sparqlQuery);    const sparqlApiUrl = this.database.newSparqlAdress(sparqlQuery);
+    console.log('sparqlQuery générée:', sparqlQuery);
+    const sparqlApiUrl = this.database.newSparqlAdress(sparqlQuery);
 
     this.database.databaseToDisplay(sparqlApiUrl).subscribe({
       next: (batchData) => {
         if (batchData && batchData.length > 0) {
-  
-          this.totalLoaded = batchData.length;
+
+          // Déduplication globale sur title.id
+          const dedupedData = this.deduplicateByTitleId(batchData);
+
+          this.totalLoaded = dedupedData.length;
 
           // Limiter les données initiales pour un affichage plus rapide
-          const initialDisplayData = batchData.slice(0, this.pageSize);
+          const initialDisplayData = dedupedData.slice(0, this.pageSize);
 
           // Mettre à jour les données complètes dans le service
-          this.database.updateBiblioData(batchData);
-          this.length = batchData.length;
+          this.database.updateBiblioData(dedupedData);
+          this.length = dedupedData.length;
 
           // Afficher d'abord un sous-ensemble pour performance
           this.dataSource.data = initialDisplayData;
@@ -309,13 +314,13 @@ export class BibliographyComponent implements OnInit, AfterViewInit {
 
           // Ensuite mettre à jour avec toutes les données du lot
           setTimeout(() => {
-            this.dataSource.data = batchData;
+            this.dataSource.data = dedupedData;
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
             this.cdr.markForCheck();
 
             // Continuer le chargement en arrière-plan
-            if (batchData.length > 0 && this.totalLoaded < this.maxResults) {
+            if (dedupedData.length > 0 && this.totalLoaded < this.maxResults) {
               setTimeout(() => {
                 this.loadRemainingBatches(this.totalLoaded);
               }, 500);
@@ -335,6 +340,7 @@ export class BibliographyComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  
 
   private loadRemainingBatches(offset: number) {
     this.isLoadingBatch = true;
@@ -345,43 +351,30 @@ export class BibliographyComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      // Utiliser la taille de lot plus grande pour les chargements suivants
       const batchSize = this.subsequentBatchSize;
-
       const sparqlQuery = this.database.sparqlBuilding(this.myLang, batchSize, currentOffset);
-      console.log('Batch offset:', offset, 'Query:', sparqlQuery);
-
       const sparqlApiUrl = this.database.newSparqlAdress(sparqlQuery);
 
       this.database.databaseToDisplay(sparqlApiUrl).subscribe({
         next: (batchData) => {
           if (batchData && batchData.length > 0) {
-            // Récupérer les données existantes
             const currentData = this.database.getCurrentData() || [];
-
-            // Ajouter les nouvelles données
-            const newData = [...currentData, ...batchData];
-            this.totalLoaded += batchData.length;
-
-            // Mettre à jour le cache
-            this.database.updateBiblioData(newData);
-
-            // Mettre à jour l'interface
-            this.length = newData.length;
+            // Fusionner et dédupliquer
+            const mergedData = this.deduplicateByTitleId([...currentData, ...batchData]);
+            this.totalLoaded = mergedData.length;
+            this.database.updateBiblioData(mergedData);
+            this.length = mergedData.length;
             this.cdr.markForCheck();
 
-            // Continuer avec le lot suivant si nécessaire
             if (batchData.length === batchSize && this.totalLoaded < this.maxResults) {
               setTimeout(() => {
                 loadNextBatch(currentOffset + batchSize);
               }, 500);
             } else {
-              // Fin du chargement
               this.isLoadingBatch = false;
               this.cdr.markForCheck();
             }
           } else {
-            // Aucune donnée supplémentaire
             this.isLoadingBatch = false;
             this.cdr.markForCheck();
           }
@@ -394,8 +387,18 @@ export class BibliographyComponent implements OnInit, AfterViewInit {
       });
     };
 
-    // Démarrer le chargement des lots suivants
     loadNextBatch(offset);
+  }
+
+  private deduplicateByTitleId(entries: HU[]): HU[] {
+    const seen = new Set<string>();
+    return entries.filter(entry => {
+      const key = entry.title?.id?.trim();
+      if (!key) return true;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }
 
   getHeaderLabel(column: string): string {
