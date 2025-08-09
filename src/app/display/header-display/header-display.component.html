@@ -2,12 +2,12 @@
   @for (P of headerDetail; track P) {
   <div class="labelTitlePadding">
     @if (P.id === 'P131') {
-    <span class="p131-toggle-label hover-bg-light"
+    <span class="statement-toggle-label hover-bg-light"
           (click)="toggleP131()"
           matTooltip="[{{P.id}}] {{P.description || ''}}"
           matTooltipPosition="right">
-      <span class="triangle-icon" [class.open]="showP131"></span>
       <span class="propertyStyle">{{P.label}}</span>
+      <span class="triangle-icon triangle-with-margin" [class.open]="showP131"></span>
     </span>
     }
     @else {
@@ -336,5 +336,19 @@
   </div>
   }
   }
+  }
+  @if(hu_notice) {
+  <div class="labelTitlePadding">
+    <span class="statement-toggle-label hover-bg-light"
+          (click)="toggleNoticeHU()"
+          aria-label="Afficher/Masquer la notice HU">
+      <span class="propertyStyle">{{ showNotice ? (hideNoticeText || 'Masquer la notice HU') : (showNoticeText || 'Afficher la notice HU') }}</span>      <span class="triangle-icon triangle-with-margin" [class.open]="showNotice"></span>
+    </span>
+    @if (showNotice) {
+    <mat-card-content class="notice-card mat-card-content">
+      <div [innerHTML]="hu_notice"></div>
+    </mat-card-content>
+    }
+  </div>
   }
 </mat-card-content>

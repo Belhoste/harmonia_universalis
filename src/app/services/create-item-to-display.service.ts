@@ -3,8 +3,9 @@ import { SetLanguageService } from './set-language.service';
 import { DetailsService } from './details.service';
 import { PropertyDetailsService } from './property-details.service';
 import { ItemDetailsService } from './item-details.service';
-import { RoleOfObjectRenderingService } from './role-of-object-rendering.service'; 
-import { forkJoin } from 'rxjs';
+import { RoleOfObjectRenderingService } from './role-of-object-rendering.service';
+import { ItemTalkService } from './item-talk.service';
+import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -16,13 +17,20 @@ export class CreateItemToDisplayService {
   private addPropertyDetails = inject(PropertyDetailsService);
   private addItemDetails = inject(ItemDetailsService);
   private roleOfObjectRendering = inject(RoleOfObjectRenderingService);
+  private itemTalk = inject(ItemTalkService);
 
   createItemToDisplay(re, selectedLang) {
     const itemProperties = Object.keys(re.claims);
+    const hasP131Q99677 = re.claims.P131?.some(
+      (claim: any) => claim.mainsnak?.datavalue?.value?.id === 'Q99677'
+    );
 
     return forkJoin({
       properties: this.details.setPropertiesList(re),
-      items: this.details.setItemsList(re)
+      items: this.details.setItemsList(re),
+      notice: hasP131Q99677
+        ? this.itemTalk.getItemTalkContent(re.id)
+        : of(null)
     }).pipe(
       map(res => {
         // Prepare property and item metadata in the selected language
@@ -32,6 +40,7 @@ export class CreateItemToDisplayService {
         // Enrich the claims with all necessary details
         this.enrichClaims(re, propertiesDetails, itemsDetails, itemProperties, selectedLang);
 
+  
         // Applique la transformation avancée des rôles d'objet
         this.roleOfObjectRendering.transformProperties(re);
 
@@ -44,7 +53,12 @@ export class CreateItemToDisplayService {
         const referenceProperties = this.details.getReferenceProperties(re);
 
         // Build the final item structure
-        const item = this.addItemDetails.addReference2ItemDetails(itemsDetails, re, updatedItemProperties);
+        let item = this.addItemDetails.addReference2ItemDetails(itemsDetails, re, updatedItemProperties);
+
+        // Ajout de la notice HU si elle existe
+        if (res.notice) {
+          item = this.addItemDetails.addNoticeClaim(item, { notice_HU: res.notice[0]["*"] });
+        }
 
         return [item, updatedItemProperties, qualifierProperties, referenceProperties];
       })
@@ -65,6 +79,7 @@ export class CreateItemToDisplayService {
     this.addItemDetails.addClaimItemDetails(itemsDetails, re, itemProperties, selectedLang);
     this.addItemDetails.addQualifierItemDetails(itemsDetails, re, itemProperties, selectedLang);
     this.addItemDetails.addReferenceItemDetails(itemsDetails, re, itemProperties, selectedLang);
+
   }
 
   /** Appends the P820 label (lowercase) in parentheses to the statement label and removes the qualifier */

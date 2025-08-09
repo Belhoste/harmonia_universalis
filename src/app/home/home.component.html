@@ -1,12 +1,12 @@
-<div class="home-container">
+<div class="cardBackground">
   <div class="home-header">
     <div class="home-title">Harmonia Universalis</div>
-    <div class="home-subtitle">a database on animal magnetism</div>
+    <div class="home-subtitle">{{ home_subtitle }}</div>
   </div>
 
-  <div class="home-cards">
-    <mat-card class="home-card mat-elevation-z4">
-      <mat-card-title>Base prosopographique</mat-card-title>
+ <div class="home-cards">
+  <!---   <mat-card-title>Base prosopographique</mat-card-title>
+   <mat-card class="home-card mat-elevation-z4">
       <mat-card-content>
         Accédez à la base de données des personnes liées au magnétisme animal.
       </mat-card-content>
@@ -16,44 +16,45 @@
         </button>
       </mat-card-actions>
     </mat-card>
+  --->
 
-    <div class="home-cards">
-      <mat-card class="home-card mat-elevation-z4">
-        <mat-card-title>Recherche magnétisme animal</mat-card-title>
-        <mat-card-content>
-          Effectuez une recherche sur le magnétisme animal.
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" routerLink="/animal_magnetism">
-            Magnétisme animal
-          </button>
-        </mat-card-actions>
-      </mat-card>
 
-      <mat-card class="home-card mat-elevation-z4">
-        <mat-card-title>Base bibliographique</mat-card-title>
-        <mat-card-content>
-          Consultez la bibliographie Harmonia Universalis.
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" routerLink="/harmonia_universalis">
-            Bibliographie
-          </button>
-        </mat-card-actions>
-      </mat-card>
+     <mat-card class="home-card mat-elevation-z4">
+       <mat-card-title>{{animalMagnetism}}</mat-card-title>
+       <mat-card-content>
+         {{searchOnAnimalMagnetism}}.
+       </mat-card-content>
+       <mat-card-actions>
+         <button mat-raised-button color="primary" routerLink="/animal_magnetism">
+           {{search}}
+         </button>
+       </mat-card-actions>
+     </mat-card>
 
-      <mat-card class="home-card mat-elevation-z4">
-        <mat-card-title>Recherche globale</mat-card-title>
-        <mat-card-content>
-          Effectuez une recherche sur l’ensemble de la base FactGrid.
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="primary" routerLink="/search">
-            Recherche
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+     <mat-card class="home-card mat-elevation-z4">
+       <mat-card-title>{{bibliography}}</mat-card-title>
+       <mat-card-content>
+         {{searchOnBibliography}}.
+       </mat-card-content>
+       <mat-card-actions>
+         <button mat-raised-button color="primary" routerLink="/bibliography">
+           {{search}}
+         </button>
+       </mat-card-actions>
+     </mat-card>
+
+     <mat-card class="home-card mat-elevation-z4">
+       <mat-card-title>FactGrid</mat-card-title>
+       <mat-card-content>
+         {{searchOnFactGrid}}.
+       </mat-card-content>
+       <mat-card-actions>
+         <button mat-raised-button color="primary" routerLink="/search">
+           {{search}}
+         </button>
+       </mat-card-actions>
+     </mat-card>
+</div>
 
     <!-- Bloc image sous les cartes, bien aligné -->
     <div class="home-image-card">

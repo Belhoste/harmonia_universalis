@@ -1,132 +1,219 @@
-//this component 
-
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { FormControl } from '@angular/forms' ;
-import { debounceTime, switchMap, map, filter, takeWhile } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { SetLanguageService } from './services/set-language.service';
-import { RequestService } from './services/request.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormControl } from '@angular/forms';
+import { BehaviorSubject, Observable, map, startWith, combineLatest } from 'rxjs';
 import { SlideUpAnimation } from './slide-up-animation';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
 import { FooterComponent } from './footer/footer.component';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RequestService } from './services/request.service';
+import { SelectedResearchFieldService, ResearchField } from './services/selected-research-field.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { SelectedLangService } from './selected-lang.service';
 
 export interface Lang {
-  name: string; 
-  code: string; }
-
-
+  name: string;
+  code: string;
+}
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    animations: [SlideUpAnimation],
-    imports: [MatToolbarModule, MatButtonModule, MatMenuModule, MatIconModule, RouterModule, RouterLink, FooterComponent]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  animations: [SlideUpAnimation],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    RouterModule,
+    FooterComponent,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatDividerModule
+  ]
 })
+export class AppComponent implements OnInit {
+  private router = inject(Router);
+  private request = inject(RequestService);
+  private selectedResearchFieldService = inject(SelectedResearchFieldService);
+  private lang = inject(SelectedLangService);
 
+  langs: Lang[] = [
+    { name: 'English', code: 'en' },
+    { name: 'Deutsch', code: 'de' },
+    { name: 'Français', code: 'fr' },
+    { name: 'Español', code: 'es' },
+    { name: '中文', code: 'zh' },
+    { name: 'Italiano', code: 'it' },
+    { name: 'Magyar', code: 'hu' },
+    { name: 'Svenska', code: 'se' }
+  ];
 
-export class AppComponent implements OnInit
-//, OnDestroy 
-{
+  specialPages = [
+    { name: 'Harmonia Universalis', address: 'harmonia_universalis' },
+    { name: 'Paris', address: 'paris' }
+  ];
 
-  langs:Lang[] = [{name:'English',code:"en"},{name:'German',code:"de"},{name:'French',code:"fr"}, {name:'Spanish',code:"es"}, 
-           {name:'Italian',code:"it"}, {name:'Hungarian',code:"hu"}, {name:'Swedish',code:"se"}];//list of the languages
+  researchFields: any[] = [];
+  private researchFields$ = new BehaviorSubject<any[]>([]);
+  searchResearchField = new FormControl<ResearchField | null>(null);
+  filteredResearchFields$: Observable<any[]>;
 
-
-  specialPages = [ {name:'Harmonia Universalis', address:"harmonia_universalis"}, {name:'Paris', address:"paris"} ] ;
-
-  researchFields:any[] = [{name:'all', id:"all"},{name:'Illuminati',id:"Q10677"}, {name:'student corporations', id:"Q28115"}, {name:'animal magnetism',id:"Q172203"}, {name:'freemasonry', id:"Q10678"},
-                          {name:'prose fiction', id:"Q195135"}, {name:'Paris',id:"Q10441"}, {name:'Harmonia Universalis',id:"Q99677"}]; //list of the research fields
-
-  selectedLang:string = (localStorage['selectedLang']===undefined)? "en": localStorage['selectedLang']; //initialization of the storage of the selected language (english)
-
-  selectedPage = (sessionStorage['selectedPage'] ===undefined)? JSON.stringify([{ name:'FactGrid', address:"" }]) : sessionStorage['selectedPage']; //initialization of the storage of the selected page (FactGrid)
-
-
-  selectedItems:any[] = []; //initialization of the array of selected items
-
-  selectedParisItems: any[] = [];  //initialization of the array of selected items on Paris
-
-  selectedResearchField: string = localStorage['selectedResearchField']; //storage of the selected research field
-
+  selectedLang: string = (localStorage['selectedLang'] === undefined) ? 'en' : localStorage['selectedLang'];
+  selectedPage = (sessionStorage['selectedPage'] === undefined)
+    ? JSON.stringify([{ name: 'FactGrid', address: '' }])
+    : sessionStorage['selectedPage'];
+  selectedItems: any[] = [];
+  selectedParisItems: any[] = [];
+  selectedResearchField: string = localStorage['selectedResearchField'];
   title = 'factgrid';
-
-  subtitle:string;
-  
+  subtitle: string;
   searchInput = new FormControl();
-
- public selectedItem:Observable<any>;
-
- searchToken:string = "on";  //initialization of the token used to hide/display the display component   todo: change into public isDisplay:boolean = "false"
-
- //animationState = 'in';
-
- public isDown: boolean = true;
- //state:string = 'down';
-
-   u:string;
-
-  labels
+  public selectedItem: Observable<any>;
+  searchToken: string = 'on';
+  public isDown: boolean = true;
+  u: string;
+  labels;
   items = [];
   newItem;
-  itemId:string;
- 
-/*private baseSearchURL = 'https://database.factgrid.de//w/api.php?action=wbsearchentities&search=' ;
-private baseGetURL = 'https://database.factgrid.de//w/api.php?action=wbgetentities&ids=' ;
-private searchUrlSuffix = '&language=en&uselang=fr&limit=50&format=json&origin=*' ;
-private getUrlSuffix= '&format=json&origin=*' ; */
+  itemId: string;
 
+  showResearchField = false;
 
-  constructor( ){} 
-  
+  projectSearch: string = "Search a project";
+  projectName: string = "Project name";
+
+  getResearchFieldQuery(lang: string): string {
+    return `https://database.factgrid.de/sparql?query=SELECT ?item ?itemLabel ?itemDescription  
+    WHERE {
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "${lang},en". }
+      ?item wdt:P2 wd:Q11295.
+    }`;
+  }
+
+  constructor() { }
+
   ngOnInit(): void {
-
-    if (localStorage['selectedLang']===undefined) {
-      localStorage.setItem("selectedLang", "en");
+    if (localStorage['selectedLang'] === undefined) {
+      localStorage.setItem('selectedLang', 'en');
+    }
+    if (localStorage['selectedItems'] === undefined) {
+      localStorage.setItem('selectedItems', JSON.stringify([{ value: { id: 'Q152233' }, label: 'FactGrid' }]));
+    }
+    if (localStorage['selectedResearchField'] === undefined) {
+      localStorage.setItem('selectedResearchField', 'all');
+    }
+    if (localStorage['selectedParisItems'] === undefined) {
+      localStorage.setItem('selectedParisItems', JSON.stringify([{ value: { id: 'Q152233' }, label: 'FactGrid' }]));
     }
 
-    if (localStorage['selectedItems']===undefined){    //initialization of the storage of selected items
-      localStorage.setItem("selectedItems", JSON.stringify([{ value: {id: "Q152233"}, label:"FactGrid" }]));
-    }
+    this.projectSearch = this.lang.getTranslation('projectSearch', this.lang.selectedLang);
+    this.projectName = this.lang.getTranslation('projectName', this.lang.selectedLang);
 
-    if (localStorage['selectedResearchField']===undefined){  //initialization of the storage of the research field
-      localStorage.setItem("selectedResearchField", "all");
-    }
+    // Initialisation du champ projet avec l'objet projet courant
+    const selected = this.selectedResearchFieldService.getSelectedResearchField();
+    this.searchResearchField.setValue(selected);
 
-    if (localStorage['selectedParisItems']===undefined){    //initialization of the storage of selected items
-      localStorage.setItem("selectedParisItems", JSON.stringify([{ value: {id: "Q152233"}, label:"FactGrid" }]));
-    }
+    this.selectedResearchFieldService.showResearchField$.subscribe(show => {
+      this.showResearchField = show;
+    })
 
+    // Synchronisation continue avec le service
+    this.selectedResearchFieldService.selectedResearchField$.subscribe(selected => {
+      if (this.searchResearchField.value?.id !== selected?.id) {
+        this.searchResearchField.setValue(selected, { emitEvent: false });
+      }
+    });
+
+    // Initialisation de l'observable filtré, toujours prêt
+    this.filteredResearchFields$ = combineLatest([
+      this.researchFields$,
+      this.searchResearchField.valueChanges.pipe(startWith(''))
+    ]).pipe(
+      map(([fields, value]) => {
+        const search = (typeof value === 'string' ? value : value?.name || '').toLowerCase();
+        return fields.filter(f => f.name.toLowerCase().includes(search));
+      })
+    );
+
+    // Récupération des projets depuis le backend
+    this.request.getList(this.getResearchFieldQuery(this.selectedLang))
+      .pipe(
+        map(res => this.listFromSparql(res)),
+        map(res => [
+          { name: '-', id: '-' },
+          ...res.results.bindings.map(b => ({
+            name: b.itemLabel.value,
+            id: b.item.id,
+            description: b.itemDescription?.value ?? ''
+          }))
+        ])
+      )
+      .subscribe(projects => {
+        projects.sort((a, b) => a.name.localeCompare(b.name));
+        this.researchFields = projects;
+        this.researchFields$.next(projects); // met à jour le BehaviorSubject
+      });
   }
 
-   
-  
-  langSetting(lang){
+  langSetting(lang) {
     if (lang !== undefined) {
-       this.selectedLang = lang.code;
+      this.selectedLang = lang.code;
     }
-    localStorage['selectedLang'] = this.selectedLang; 
-     window.location.reload();
-    }
-
-   researchFieldSelect(researchField){
-     if (researchField === undefined) { this.selectedResearchField = "all" };
-     if (researchField !== undefined) { this.selectedResearchField = researchField.id; };
-  //   console.log(researchField.id);
-     localStorage['selectedResearchField'] = this.selectedResearchField;
-   //   if(this.selectedResearchField = "Q10441") { this.router.navigate(['harmonia_universalis']) }
- 
-
-       }
-
-   linking(){
-    window.open("https://database.factgrid.de/wiki/Main_Page", '_blank')
+    localStorage['selectedLang'] = this.selectedLang;
+    window.location.reload();
   }
 
+  researchFieldSelect(researchField) {
+    this.selectedResearchFieldService.setSelectedResearchField({
+      id: researchField.id,
+      name: researchField.name,
+      description: researchField.description ?? ''
+    });
+    // Synchronise l'input projet avec la sélection (objet projet)
+    this.searchResearchField.setValue(researchField);
+  }
+
+  linking() {
+    window.open('https://database.factgrid.de/wiki/Main_Page', '_blank');
+  }
+
+  listFromSparql(res) {
+    if (res !== undefined) {
+      if (res.results !== undefined) {
+        for (let i = 0; i < res.results.bindings.length; i++) {
+          res.results.bindings[i]["item"].id = res.results.bindings[i]["item"].value.replace(
+            "https://database.factgrid.de/entity/", "");
+          res.results.bindings[i]["item"].id.startsWith("P") ? res.results.bindings[i]["item"].entity = "property" : res.results.bindings[i]["item"].entity = "item";
+        }
+      }
+    }
+    else {
+      res = { head: { vars: ['item', 'itemLabel', 'itemDescription', 'fLabel', 'activityLabel'] }, results: { bindings: [] } }
+    }
+    return res
+  }
+
+  displayResearchField(researchField: any): string {
+    return researchField && researchField.name ? researchField.name : '-';
+  }
+
+  toggleResearchField() {
+    this.showResearchField = !this.showResearchField;
+    this.selectedResearchFieldService.setShowResearchField(this.showResearchField);
+  }
 }

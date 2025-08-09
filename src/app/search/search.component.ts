@@ -10,12 +10,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 //import { RouterLinkActive, RouterLink, RouterOutlet } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { SetLanguageService } from '../services/set-language.service';
 import { RequestService } from '../services/request.service';
 import { SelectedLangService } from '../selected-lang.service';
-
-
+import { LastSearchRouteService } from '../services/last-search-route.service'; 
 
 
 
@@ -45,15 +44,19 @@ export class SearchComponent implements OnInit {
  private request = inject(RequestService);
  private setLanguage = inject(SetLanguageService);
  private lang = inject(SelectedLangService);
+  private lastSearchRoute = inject(LastSearchRouteService);
+  private router = inject(Router);
 
 
   //  selectedLang: string = (localStorage['selectedLang']===undefined)? "en": localStorage['selectedLang']; //initialization of the storage of the selected language (english)
 
-    title = 'harmoniaUniversalis';
+    title = 'FactGrid';
     subTitle:string = "a database on animal magnetism";
     advanced_search:string = "advanced search";
     projects:string = "research projects";
-    fields: string = "fields of reserach";
+  fields:string = "fields of reserach";
+
+  bibliography:string = "bibliography";
 
  
    
@@ -80,12 +83,16 @@ export class SearchComponent implements OnInit {
 
 
   
-  //  this.request.getStat();
-
+  goToDisplay(itemId: string) {
+    this.lastSearchRoute.setLastSearchRoute(this.router.url);
+    this.router.navigate(['/item', itemId]);
+  }
 
   ngOnInit(): void {
 
-    this.subTitle = this.lang.getTranslation('setTitle', this.lang.selectedLang);
+    this.bibliography = this.lang.getTranslation('bibliography', this.lang.selectedLang);
+
+    this.subTitle = this.lang.getTranslation('FactGrid_subtitle', this.lang.selectedLang);
 
     this.advanced_search = this.lang.getTranslation('advanced_search',this.lang.selectedLang);
 

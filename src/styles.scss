@@ -15,8 +15,8 @@
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 
-// @include mat.elevation-classes();
-// @include mat.app-background();
+//@include mat.elevation-classes();
+//@include mat.app-background();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -142,16 +142,21 @@ $my-theme: mat.m2-define-light-theme(( color:(
 /// @include mat.checkbox-typography($custom-typography);
 
 // Override typography for all Angular Material, including mat-base-typography and all components.
-/// @include mat.all-component-typographies($custom-typography);
+//@include mat.all-component-typographies($my-typography);
 
 /// @include mat.core($custom-typography);
 
 
 html, body {
-  font-family: 'Oxygen';
+  font-family: 'Oxygen', Arial, sans-serif;
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.mat-typography, .mat-app-background, .mat-mdc-button,
+.mat-mdc-card, .mat-mdc-dialog-container {
+  font-family: 'Oxygen', Arial, sans-serif !important;
 }
 
 .app-container {
@@ -270,20 +275,25 @@ html, body {
 
 .cardBackground {
   height: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 900px; /* ou la largeur souhaitée */
+  margin-left: 12px;
+  margin-right: 0;
+  max-width: 100%; // ou supprimez cette ligne
+  width: 95%;
+  text-align: left;
+  padding-left: 30px; // marge intérieure à gauche
+  padding-right: 24px; // optionnel, pour équilibrer à droite
 }
 
 
-@media screen and (max-width: 959.98px) { //change the padding for small screen
-  .cardBackground { // for styling card
+@media screen and (max-width: 959.98px) {
+  .cardBackground {
     height: fit-content;
     margin-right: 2px;
     margin-left: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
-  }
-
+}
 .listStyle{  // for styling the list of statements in a section
     padding-left: 30px;
 }
@@ -375,6 +385,11 @@ html, body {
     transform: rotate(90deg); // triangle vers le bas quand ouvert
   }
 }
+
+.triangle-with-margin {
+  margin-left: 6px;
+}
+
 
 .colored-reference {
   background: #f6f8fd; // bleu primary très clair
@@ -993,29 +1008,109 @@ button.mat-icon-button .mat-icon {
     transform: translateX(-50%) translateY(-50%);
   }
 
-// Effet de survol générique pour fond clair
-.hover-bg-light {
-  transition: background-color 0.2s;
+
+/* Titres et sous-titres principaux */
+.home-header, .prosopo-header, .hu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+  margin-top: 24px;
 }
 
-.hover-bg-light:hover, .hover-bg-light:focus {
-  background-color: #f5f5f5 !important; // gris très clair
-  cursor: pointer;
+.home-title, .prosopo-title, .hu-title {
+  font-size: 3rem;
+  color: #3F51B5;
+  font-family: 'Oxygen', Arial, Helvetica, sans-serif;
+  font-weight: 150;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-// Effet de survol générique pour fond accentué (exemple)
-.hover-bg-accent {
-  transition: background-color 0.2s;
+.home-subtitle, .prosopo-subtitle, .hu-subtitle {
+  font-size: 1.3rem;
+  color: #666;
+  font-family: 'Oxygen', Arial, Helvetica, sans-serif;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
-.hover-bg-accent:hover, .hover-bg-accent:focus {
-  background-color: #e3eafc !important; // bleu très clair
-  cursor: pointer;
+/* Spécifique pour mobile */
+@media (max-width: 767px) {
+  .home-title, .prosopo-title, .hu-title {
+    line-height: 1.1; /* Interlignage encore plus grand sur mobile */
+    font-size: 2.5rem; /* Réduire légèrement la taille si nécessaire */
+  }
+
+  .home-subtitle, .prosopo-subtitle, .hu-subtitle {
+    line-height: 1.1;
+    margin-top: 3px;
+    margin-bottom: 3px;
+  }
 }
 
-.separatorStyle {
-  margin-left: 1em; // ou la valeur qui convient, par exemple 8px ou 16px
+/* Liens sous le titre */
+.prosopo-links, .hu-links {
+  margin-top: 8px;
+  font-size: 1.1rem;
+  color: #3F51B5;
+  text-align: center;
 }
+
+.prosopo-links a, .hu-links a {
+  color: #3F51B5;
+  text-decoration: none;
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.prosopo-links a:hover, .hu-links a:hover {
+  text-decoration: underline;
+}
+
+.router-links {
+  display: flex;
+  justify-content: center;
+  gap: 1px; /* espace entre les liens */
+ // margin-top: 6px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 767px) {
+  .router-links {
+    display: flex;
+    justify-content: center;
+    gap: 1px; /* espace entre les liens */
+    font-size: 0.7rem;
+  }
+
+
+  }
+
+  // Effet de survol générique pour fond clair
+  .hover-bg-light {
+    transition: background-color 0.2s;
+  }
+
+  .hover-bg-light:hover, .hover-bg-light:focus {
+    background-color: #f5f5f5 !important; // gris très clair
+    cursor: pointer;
+  }
+
+  // Effet de survol générique pour fond accentué (exemple)
+  .hover-bg-accent {
+    transition: background-color 0.2s;
+  }
+
+  .hover-bg-accent:hover, .hover-bg-accent:focus {
+    background-color: #e3eafc !important; // bleu très clair
+    cursor: pointer;
+  }
+
+  .separatorStyle {
+    margin-left: 1em; // ou la valeur qui convient, par exemple 8px ou 16px
+  }
 
 
 

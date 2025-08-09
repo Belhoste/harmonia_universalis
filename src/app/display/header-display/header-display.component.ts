@@ -1,23 +1,36 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { UnitPipe } from '../../unit.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SelectedLangService } from '../../selected-lang.service';
 
 @Component({
-    selector: 'app-header-display',
-    imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
-    templateUrl: './header-display.component.html',
-    styleUrl: './header-display.component.scss'
+  selector: 'app-header-display',
+  standalone: true,
+  imports: [CommonModule, MatIconModule, MatCardModule, RouterLink, UnitPipe, MatTooltipModule],
+  templateUrl: './header-display.component.html',
+  styleUrl: './header-display.component.scss'
 })
 export class HeaderDisplayComponent {
 
   @Input() headerDetail;
+  @Input() hu_notice;
+
+  private lang = inject(SelectedLangService);
 
   // Optimized headerDetail for display in the template
   headerDetailOptimized: any[] = [];
+  hideNoticeText: string = "Hide notice";
+  showNoticeText: string = "Show notice";
+
+  ngOnInit() {
+    this.hideNoticeText = this.lang.getTranslation('hideNoticeText', this.lang.selectedLang);
+    this.showNoticeText = this.lang.getTranslation('showNoticeText', this.lang.selectedLang);
+
+  }
 
   ngOnChanges() {
     if (this.headerDetail) {
@@ -32,6 +45,7 @@ export class HeaderDisplayComponent {
 
   showReferences = false; // state for references panel
   showP131 = false; // state for P131 panel
+  showNotice = false; // state for notice panel
 
   toggleReferences() {
     this.showReferences = !this.showReferences;
@@ -39,6 +53,10 @@ export class HeaderDisplayComponent {
 
   toggleP131() { 
     this.showP131 = !this.showP131;
+  }
+
+  toggleNoticeHU() {
+    this.showNotice = !this.showNotice;
   }
 
   /**

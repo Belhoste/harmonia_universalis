@@ -3,7 +3,6 @@ import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 import { DisplayComponent} from './display/display.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './display/map/map.component';
-import { ParisSearchComponent } from './paris-search/paris-search.component'
 
 export const routingConfiguration: ExtraOptions = {
   paramsInheritanceStrategy: 'always'
@@ -24,10 +23,8 @@ const routes: Routes = [
   children: [{ path: ':lat/:lng/:z', component:MapComponent}
   ]
   },
-  { path: 'paris', loadComponent: () => import('./paris-search/paris-search.component').then(mod => mod.ParisSearchComponent) },
-  { path: 'harmonia_universalis', loadComponent: () => import('./harmonia-universalis/harmonia-universalis.component').then(mod => mod.HarmoniaUniversalisComponent) },
-  { path: 'prosopography', loadComponent: () => import('./prosopography/prosopography.component').then(mod => mod.ProsopographyComponent) },
-  { path: 'animal_magnetism', loadComponent: () => import('./prosopography-search/prosopography-search.component').then(mod => mod.ProsopographySearchComponent) },
+  { path: 'bibliography', loadComponent: () => import('./bibliography/bibliography.component').then(mod => mod.BibliographyComponent) },
+  { path: 'animal_magnetism', loadComponent: () => import('./animal-magnetism/animal-magnetism.component').then(mod => mod.AnimalMagnetismComponent) },
   { path: 'advanced_search', loadComponent: () => import('./search/advanced-search/advanced-search.component').then(mod => mod.AdvancedSearchComponent) }
 
 ]

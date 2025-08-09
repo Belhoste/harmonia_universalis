@@ -10,6 +10,7 @@ import { BackListService } from '../services/back-list.service';
 import { SetSelectedItemsListService } from '../services/set-selected-items-list.service';
 import { TranscriptionService } from './services/transcription.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ItemTalkService } from '../services/item-talk.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { JoinPipe } from '../join.pipe';
 import { ItemInfoComponent } from './item-info/item-info.component';
@@ -37,17 +38,18 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { ItemDisplayDispatcherService } from './services/item-display-dispatcher.service';
 import { RouterModule } from '@angular/router';
+import { LastSearchRouteService } from '../services/last-search-route.service'; 
 
 @Component({
     selector: 'app-display',
-    templateUrl: 'display.component.html',
+    templateUrl: './display.component.html',
     styleUrls: ['./display.component.scss'],
     imports: [
         CommonModule, MatTabsModule, MatButtonModule, RouterModule, NgIf, MatProgressSpinnerModule, MatSidenavModule,
         MatIconModule, MatCardModule, NgFor, NgClass, TextDisplayComponent, Sparql0DisplayComponent,
         Sparql1DisplayComponent, Sparql2DisplayComponent, Sparql3DisplayComponent, Sparql4DisplayComponent,
         ItemInfoComponent, MainDisplayComponent, HeaderDisplayComponent, SociabilityDisplayComponent,
-        SourcesDisplayComponent, EducationDisplayComponent, CareerDisplayComponent, IframesDisplayComponent, JoinPipe
+      SourcesDisplayComponent, EducationDisplayComponent, CareerDisplayComponent, IframesDisplayComponent, JoinPipe
     ]
 })
 export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -68,6 +70,8 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   private iframesDisplay = inject(IframesDisplayService);
   private sanitizer = inject(DomSanitizer);
   private observer = inject(BreakpointObserver);
+  private itemTalk = inject(ItemTalkService);
+  private lastRoute = inject(LastSearchRouteService);
 
   // Données principales
   item: any;
@@ -119,6 +123,7 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   natureOfList: any[] = [];
   selectedItems: any[];
   infoList: any;
+  hu_notice: string = '';
 
   // Affichage
   isSpinner = false;
@@ -152,6 +157,7 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   isInfo = false;
   isMobile = false;
   isAliases = false;
+  
 
   // Divers
   trans: any = '';
@@ -174,6 +180,8 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   urlSafe13: string;
   urlSafe14: string;
   urlSafe15: string;
+  lastSearchRoute: string = '/search';
+
 
   // SPARQL
   sparqlData0: any[] = [];
@@ -194,6 +202,8 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   subscription3: Subscription;
 
   // Textes d’interface
+  home_page: string = "Home";
+  bibliography: string = "Bibliographie";
   newSearch: string = "new search";
   linkedPagesTitle: string = "linked pages";
   mainPage: string = "main page";
@@ -204,6 +214,8 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
   clickToDownload: string = "click to download";
   stemma: string = "stemma";
   factGridLogo: string = 'https://upload.wikimedia.org/wikipedia/commons/b/b6/FactGrid-Logo4.png';
+
+  
 
   ngOnInit(): void {
     const selectedResearchField = localStorage.getItem('selectedResearchField');
@@ -220,6 +232,15 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clickToDownload = this.lang.getTranslation('clickToDownLoad', this.lang.selectedLang);
     this.clickToDisplay = this.lang.getTranslation('clickToDisplay', this.lang.selectedLang);
     this.stemma = this.lang.getTranslation('stemma', this.lang.selectedLang);
+    this.home_page = this.lang.getTranslation('home_page', this.lang.selectedLang);
+    this.bibliography = this.lang.getTranslation('bibliography', this.lang.selectedLang);
+
+
+    this.lastSearchRoute = this.lastRoute.getLastSearchRoute();
+    console.log('Route de retour utilisée :', this.lastSearchRoute); // <-- Ajoutez ceci
+
+    console.log('DisplayComponent chargé');
+    
 
     this.subscription0 = this.route.paramMap.subscribe(params => {
       this.itemId = params.get('id');
@@ -353,6 +374,13 @@ export class DisplayComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.trans = "";
       }
+
+      // notice HU
+
+      if (this.item[0].notice_HU !== undefined) {
+        this.hu_notice = this.item[0].notice_HU;
+      }
+
 
       // sparql lists
 

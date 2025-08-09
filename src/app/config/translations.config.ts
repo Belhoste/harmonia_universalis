@@ -37,6 +37,15 @@ export const TRANSLATIONS = {
     hu: "összetett keresés",
     zh: "高级搜索"
   },
+  animalMagnetism: {
+    de: "Tiermagnetismus",
+    fr: "Magnétisme animal",
+    es: "Magnetismo animal",
+    it: "Magnetismo animale",
+    hu: "Állati mágnesesség",
+    en: "Animal magnetism",
+    zh: "动物磁性"
+  },
   authorHeader: {
     de: "Autor",
     fr: "Auteur",
@@ -46,14 +55,14 @@ export const TRANSLATIONS = {
     en: "Author",
     zh: "作者"
   },
-  biblioHU: {
-    de: "Bibliografie Harmonia Universalis",
-    fr: "Bibliographie Harmonia Universalis",
-    es: "Bibliografía Harmonia Universalis",
-    it: "Bibliografia Harmonia Universalis",
-    en: "Bibliography Harmonia Universalis",
-    hu: "Harmonia Universalis bibliográfia",
-    zh: "Harmonia Universalis 书目"
+  bibliography: {
+    de: "Bibliografie",
+    fr: "Bibliographie",
+    es: "Bibliografía",
+    it: "Bibliografia",
+    en: "Bibliography ",
+    hu: "Bibliográfia",
+    zh: "书目"
   },
   buildingTitle: {
     de: "Gebäude und Denkmäler:",
@@ -208,6 +217,33 @@ export const TRANSLATIONS = {
     hu: "Ön meglátogatta:",
     zh: "您访问过："
   },
+  hideNoticeText: {
+    de: "Notize ausblenden",
+    fr: "Masquer la notice",
+    es: "Ocultar la nota",
+    it: "Nascondi la nota",
+    hu: "Megjegyzés elrejtése",
+    en: "Hide notice",
+    zh: "隐藏通知"  
+  },
+  home_page: {
+    de: "Startseite",
+    fr: "Accueil",
+    es: "Inicio",
+    it: "Home",
+    en: "Home",
+    hu: "Főoldal",
+    zh: "首页"
+  },
+  home_subtitle: {
+    de: "eine Datenbank über Tiermagnetismus",
+    fr: "une base de données sur le magnétisme animal",
+    es: "una base de datos sobre el magnetismo animal",
+    it: "una banca dati sul magnetismo animale",
+    en: "a database on animal magnetism",
+    hu: "állati mágnesességről szóló adatbázis",
+    zh: "动物磁性数据库"
+  },
   instancesListTitle: {
     de: "Instanzen (Limit: 200):",
     fr: "Instances (limite: 200):",
@@ -252,6 +288,25 @@ export const TRANSLATIONS = {
     hu: "Lista",
     en: "List",
     zh: "列表"
+  },
+  loadingMessage: {
+    de: "Lade ersten Daten...",
+    fr: "Chargement des premières données...",
+    es: "Cargando primeros datos...",
+    it: "Caricamento dei primi dati...",
+    hu: "Első adatok betöltése...",
+    en: "Loading first data...",
+    zh: "加载初始数据..."
+  },
+
+   loadingBatchMessage: {
+     de: "Lade zusätzlicher Daten...",
+    fr: "Chargement des données supplémentaires...",
+    es: "Cargando datos adicionales...",
+    it: "Caricamento di dati aggiuntivi...",
+    hu: "További adatok betöltése...",
+    en: "Loading additional data...",
+    zh: "加载更多数据..."
   },
   locationHeader: {
     de: "Ort",
@@ -382,6 +437,42 @@ export const TRANSLATIONS = {
     en: "Results",
     zh: "结果"
   },
+  search: {
+    de: "Suche",
+    fr: "Recherche",
+    es: "Buscar",
+    it: "Cerca",
+    hu: "Keresés",
+    en: "Search",
+    zh: "搜索"
+  },
+  searchOnAnimalMagnetism: {
+    de: "Recherchieren Sie zum Thema Tiermagnetismus",
+    fr: "Effectuez une recherche sur le magnétisme animal",
+    es: "Hacer una búsqueda sobre el magnetismo animal",
+    it: "Fare una ricerca sul magnetismo animale",
+    hu: "Kutatás az állati mágnesességről",
+    en: "Do a search on animal magnetism",
+    zh: "进行动物磁性搜索"
+  },
+  searchOnBibliography: {
+    fr: "Consultez la bibliographie Harmonia Universalis",
+    de: "Durchsuchen Sie die Harmonia Universalis Bibliographie",
+    es: "Consulte la bibliografía Harmonia Universalis",
+    it: "Consulta la bibliografia Harmonia Universalis",
+    hu: "Harmonia Universalis bibliográfia megtekintése",
+    en: "Consult the Harmonia Universalis bibliography",
+    zh: "查阅 Harmonia Universalis 书目"
+  },
+  searchOnFactGrid: {
+    fr: "Effectuez une recherche sur l'ensemble de la base FactGrid",
+    de: "Recherchieren Sie in der gesamten FactGrid-Datenbank",
+    es: "Hacer una búsqueda en toda la base de datos FactGrid",
+    it: "Fare una ricerca nell'intero database FactGrid",
+    hu: "Kutatás a FactGrid adatbázisban",
+    en: "Do a search in the entire FactGrid database",
+    zh: "在整个 FactGrid 数据库中进行搜索"
+  },
   setTitle: {
     de: "Erhalten:",
     fr: "Inclus :",
@@ -390,6 +481,15 @@ export const TRANSLATIONS = {
     hu: "Tartalmazza:",
     en: "Included:",
     zh: "包含："
+  },
+  showNoticeText: {
+    de: "Notiz anzeigen",
+    fr: "Afficher la notice",
+    es: "Mostrar la nota",
+    it: "Mostra la nota",
+    hu: "Megjegyzés megjelenítése",
+    en: "Show notice",
+    zh: "显示通知"
   },
   stemma: {
     de: "Stemma_aufwärts",
@@ -418,7 +518,7 @@ export const TRANSLATIONS = {
     en: "Subclasses:",
     zh: "子类："
   },
-  subtitle: {
+  FactGrid_subtitle: {
     de: "eine Datenbank für Historiker*innen",
     fr: "une base de données pour historien.nes",
     es: "una base de datos para historiadores",
